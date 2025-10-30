@@ -1,6 +1,12 @@
 # Compiled class file
 *.class
 
+# Dependency directory
+node_modules/
+
+# Environment Variables
+.env
+
 # Log file
 *.log
 
