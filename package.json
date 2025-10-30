@@ -1,0 +1,32 @@
+{
+  "name": "prodigy-connect",
+  "version": "1.0.0",
+  "description": "CSC 131 Computer Software Engineering - Fall 2025",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "nodemon backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ssimran2053/Prodigy-Connect.git"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ssimran2053/Prodigy-Connect/issues"
+  },
+  "homepage": "https://github.com/ssimran2053/Prodigy-Connect#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.19.2"
+  },  
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
