@@ -47,7 +47,7 @@ Make sure you have the following installed:
 Open your terminal or Git Bash and clone the repository.
 
 ```bash
-git clone [https://github.com/ssimran2053/Prodigy-Connect.git](https://github.com/ssimran2053/Prodigy-Connect.git)
+git clone https://github.com/ssimran2053/Prodigy-Connect.git
 ```
 
 Then, navigate into the project directory:
@@ -88,4 +88,5 @@ Server started at http://localhost:5001
 
 You can verify the running server by navigating to http://localhost:5001 in your web browser.
 
+---
 
