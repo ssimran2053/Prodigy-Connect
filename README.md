@@ -29,4 +29,63 @@ Prodigy Connect helps students, freelancers, and self-employed individuals conne
 - Database: MongoDB
 - Tools: WebStorm, DataGrip, GitHub, Discord
 
+---
+
+## VS Code Setup Guide
+
+Follow these steps to get the **Prodigy-Connect** server running locally on your machine.
+
+### 1. Prerequisites
+
+Make sure you have the following installed:
+* **Git**
+* **Visual Studio Code (VS Code)**
+* **Node.js** (LTS version recommended)
+
+### 2. Clone the Repository
+
+Open your terminal or Git Bash and clone the repository.
+
+```bash
+git clone [https://github.com/ssimran2053/Prodigy-Connect.git](https://github.com/ssimran2053/Prodigy-Connect.git)
+```
+
+Then, navigate into the project directory:
+```bash
+cd Prodigy-Connect
+```
+
+### 3. Install Dependencies
+
+Once inside the project folder, install all necessary Node.js packages (Express, Mongoose, Nodemon, etc.).
+```bash
+npm Install
+```
+
+### 4. Configure Environment Variables (.env)
+
+The project requires a .env file for configuration, which is kept secret and is not committed to Git.
+
+Find the .env.example file in the root directory.
+
+Duplicate this file and rename the copy to .env (removing the .example suffix).
+
+Open the new .env file and replace the placeholder values with the usernames, passwords, or credintals provided to you. (Will be in the Discord in the Resources section)
+
+### 5. Run the Server
+
+Start the backend server using the development script. This uses Nodemon to automatically restart the server whenever you save a file.
+```bash
+npm run dev
+```
+
+### 6. Verify the Connection
+Check your terminal. If the setup is correct, you should see messages confirming the database and server status:
+
+MongoDB Connected: <cluster host name>
+
+Server started at http://localhost:5001
+
+You can verify the running server by navigating to http://localhost:5001 in your web browser.
+
 
