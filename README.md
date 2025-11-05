@@ -31,7 +31,7 @@ Prodigy Connect helps students, freelancers, and self-employed individuals conne
 
 ---
 
-## 🛠️ VS Code Setup Guide
+## VS Code Setup Guide
 
 Follow these steps to get the **Prodigy-Connect** server running locally on your machine.
 
