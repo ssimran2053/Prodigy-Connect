@@ -1,13 +1,195 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prodigy Connect</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ===== HEADER / NAVBAR ===== -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" alt="Logo" />
+      <h2>Prodigy Connect</h2>
+    </div>
+<nav>
+  <a href="/service_seeker/service_seeker.html">Login</a>
+  <button class="btn-signup" onclick="window.location.href='/login.html'">
+    Sign Up
+  </button>
+</nav>
+
+
+  </header>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Connect with Local<br><span>Service Providers</span></h1>
+      <p>
+        Prodigy Connect brings together service seekers and providers in your community.
+        Find trusted professionals for any task, or offer your skills to those who need them.
+      </p>
+
+      <div class="hero-buttons">
+        <button class="btn-primary">🔍 Find Services</button>
+        <button class="btn-secondary">⚡ Offer Services</button>
+      </div>
+
+      <div class="stats">
+        <div><strong>10k+</strong><br>Active Users</div>
+        <div><strong>5k+</strong><br>Services Listed</div>
+        <div><strong>4.8★</strong><br>Average Rating</div>
+      </div>
+    </div>
+
+    <div class="hero-img">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Stick_Figures.png/640px-Stick_Figures.png" alt="Community">
+      <div class="verified">
+        ✅ Verified Safe<br><span>100% Background Checked</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES SECTION ===== -->
+  <section class="features">
+    <p class="tagline">✨ Platform Features</p>
+    <h2>Everything You Need</h2>
+    <p class="subtitle">
+      Powerful features designed to connect communities and make service discovery effortless.
+    </p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h3>👥 Connect Locally</h3>
+        <p>Find trusted service providers in your community.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📍 Location-Based</h3>
+        <p>Discover services near you with our interactive map.</p>
+      </div>
+      <div class="feature-card">
+        <h3>💬 Direct Messaging</h3>
+        <p>Communicate safely with providers through our platform.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📅 Schedule Management</h3>
+        <p>Book and manage your appointments seamlessly.</p>
+      </div>
+      <div class="feature-card">
+        <h3>⭐ Ratings & Reviews</h3>
+        <p>Make informed decisions with community feedback.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🛡️ Safe & Secure</h3>
+        <p>Admin-monitored platform ensuring trust and safety.</p>
+      </div>
+    </div>
+  </section>
+
+
+
+<!-- ===== HOW IT WORKS SECTION ===== -->
+<section class="how-it-works">
+  <div class="how-container">
+    <h2>How It Works</h2>
+    <p class="subtitle">Get started in three simple steps</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="circle">1</div>
+        <h3>Create Account</h3>
+        <p>Sign up for free as a seeker or provider</p>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <div class="step">
+        <div class="circle">2</div>
+        <h3>Browse & Connect</h3>
+        <p>Find services or post your offerings</p>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <div class="step">
+        <div class="circle">3</div>
+        <h3>Book & Complete</h3>
+        <p>Schedule appointments and get things done</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GET STARTED SECTION ===== -->
+<section class="get-started">
+  <div class="get-container">
+    <p class="tag"># Join our growing community</p>
+    <h2>Ready to Get Started?</h2>
+    <p class="subtitle">
+      Join thousands of service seekers and providers making meaningful connections every day.
+    </p>
+
+    <div class="cta-buttons">
+      <button class="btn-primary">Create Free Account</button>
+      <button class="btn-secondary">How It Works</button>
+    </div>
+
+    <div class="badges">
+      <div class="badge">
+        <span class="icon">💸</span>
+        <div>
+          <strong>100% Free</strong><br><small>No hidden fees</small>
+        </div>
+      </div>
+      <div class="badge">
+        <span class="icon">🛡️</span>
+        <div>
+          <strong>Verified Safe</strong><br><small>Background checked</small>
+        </div>
+      </div>
+      <div class="badge">
+        <span class="icon">⭐</span>
+        <div>
+          <strong>Top Rated</strong><br><small>4.8/5 average</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+  
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <h2>Prodigy Connect</h2>
+        <p>Connecting communities through trusted local services.</p>
+      </div>
+
+      <div class="footer-links">
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="#">Browse</a></li>
+          <li><a href="#">Providers</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-social">
+        <h3>Follow Us</h3>
+        <div class="social-icons">
+          <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" /></a>
+          <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter" /></a>
+          <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" /></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© 2025 Prodigy Connect — CSC 131-04 Software Engineering Project</p>
+    </div>
+  </footer>
+</body>
 </html>

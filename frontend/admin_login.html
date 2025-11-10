@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | Prodigy Connect</title>
+  <link rel="stylesheet" href="auth.css" />
+</head>
+<body>
+  <div class="auth-wrapper">
+
+    <!-- Back button -->
+    <div class="auth-nav">
+      <button class="back-btn" onclick="window.location.href='/auth/login.html'">← Back</button>
+    </div>
+
+    <!-- Admin login card -->
+    <div class="auth-card admin-login">
+      <div class="admin-icon">
+        <img src="/images/admin-shield.png" alt="Admin Icon" />
+      </div>
+
+      <h2>Admin Access</h2>
+      <p class="subtitle">Secure administrator login portal</p>
+
+      <form>
+        <label>Admin Email</label>
+        <input type="email" placeholder="admin@prodigyconnect.com" required />
+
+        <label>Password</label>
+        <input type="password" placeholder="********" required />
+
+        <label>Security Code</label>
+        <input type="text" placeholder="Enter 6-digit code" maxlength="6" required />
+
+        <button type="submit" class="btn-gradient">Sign In as Admin</button>
+      </form>
+
+      <a href="#" class="forgot">Forgot Password</a>
+
+      <div class="divider">Quick Demo Access</div>
+      <div class="demo-buttons">
+        <button class="demo-btn">Demo as Admin</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
