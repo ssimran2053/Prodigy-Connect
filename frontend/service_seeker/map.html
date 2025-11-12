@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Map | Prodigy Connect</title>
+  <link rel="stylesheet" href="SS_style.css" />
+
+  <!-- ✅ Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- ✅ Geocoder (search bar) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css"
+  />
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+  <style>
+    /* ===== MAP PAGE STYLE FIX ===== */
+    .map-layout {
+      display: grid;
+      grid-template-columns: 350px 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .map-sidebar {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      height: 80vh;
+      overflow-y: auto;
+    }
+
+    .map-sidebar input,
+    .map-sidebar select {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-bottom: 0.8rem;
+      font-size: 0.95rem;
+    }
+
+    .use-location {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f6ff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 0.6rem;
+      cursor: pointer;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      transition: 0.2s;
+    }
+
+    .use-location:hover {
+      background: #ececff;
+    }
+
+    .provider-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 0.8rem;
+      margin-bottom: 0.8rem;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      transition: 0.2s ease;
+      cursor: pointer;
+    }
+
+    .provider-card:hover {
+      border-color: #8169ff;
+      box-shadow: 0 3px 8px rgba(129, 105, 255, 0.15);
+    }
+
+    .provider-left {
+      display: flex;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .provider-left img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #f1f1f1;
+    }
+
+    .provider-info h4 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .provider-info small {
+      color: #777;
+      font-size: 0.85rem;
+    }
+
+    .provider-rating {
+      font-size: 0.9rem;
+      color: #444;
+    }
+
+    .distance {
+      color: #ff7dc8;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    /* ✅ Map Fix */
+    #map {
+      height: 80vh !important;
+      min-height: 500px;
+      width: 100%;
+      border-radius: 12px;
+      background: #e5e5e5;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      z-index: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ======= SIDEBAR ======= -->
+  <nav class="sidebar">
+    <h2 class="logo">Prodigy Connect</h2>
+    <ul class="nav-links">
+      <li><a href="/service_seeker/service_seeker.html">Home</a></li>
+      <li><a href="/service_seeker/browse_services.html">Browse Services</a></li>
+      <li><a href="/service_seeker/favorites.html">Favorites</a></li>
+      <li><a href="/service_seeker/book_services.html">Book Services</a></li>
+      <li><a href="/service_seeker/messages.html">Messages</a></li>
+      <li><a href="/service_seeker/my_bookings.html">My Bookings</a></li>
+      <li class="active"><a href="/service_seeker/map.html">Map</a></li>
+      <li><a href="/service_seeker/advanced_search.html">Advanced Search</a></li>
+      <li><a href="/service_seeker/profile.html">Profile</a></li>
+    </ul>
+  </nav>
+
+  <!-- ======= MAIN CONTENT ======= -->
+  <main class="main-content">
+    <header class="header">
+      <div>
+        <h1>Service Map</h1>
+        <p>Find service providers near you</p>
+      </div>
+      <div class="user-info">
+        <span class="user-name">Demo User</span>
+        <span class="user-location">Sacramento, CA</span>
+      </div>
+    </header>
+
+    <section class="map-layout">
+      <!-- Left Side -->
+      <div class="map-sidebar">
+        <input id="searchInput" type="text" placeholder="Search location..." />
+        <select>
+          <option>All Categories</option>
+          <option>Home Services</option>
+          <option>Education</option>
+          <option>Health & Fitness</option>
+          <option>Tech Services</option>
+        </select>
+        <div class="use-location" id="useLocation">📍 Use My Location</div>
+
+        <div class="provider-card">
+          <div class="provider-left">
+            <img src="https://cdn-icons-png.flaticon.com/512/921/921071.png" />
+            <div class="provider-info">
+              <h4>Plumbing Services</h4>
+              <div class="provider-rating">⭐ 4.9 · $75–150/hr</div>
+              <small>Mike Anderson – Downtown Sacramento</small>
+            </div>
+          </div>
+          <div class="distance">1.2 mi</div>
+        </div>
+
+        <div class="provider-card">
+          <div class="provider-left">
+            <img src="https://cdn-icons-png.flaticon.com/512/921/921071.png" />
+            <div class="provider-info">
+              <h4>Math Tutoring</h4>
+              <div class="provider-rating">⭐ 5.0 · $40–60/hr</div>
+              <small>Emily Chen – Midtown Sacramento</small>
+            </div>
+          </div>
+          <div class="distance">2.8 mi</div>
+        </div>
+
+        <div class="provider-card">
+          <div class="provider-left">
+            <img src="https://cdn-icons-png.flaticon.com/512/921/921071.png" />
+            <div class="provider-info">
+              <h4>Landscaping</h4>
+              <div class="provider-rating">⭐ 4.8 · $500–2000</div>
+              <small>David Green – Elk Grove</small>
+            </div>
+          </div>
+          <div class="distance">15.3 mi</div>
+        </div>
+      </div>
+
+      <!-- Right Map -->
+      <div id="map"></div>
+    </section>
+  </main>
+
+  <!-- ✅ LEAFLET MAP SCRIPT -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Initialize map
+    const map = L.map("map").setView([38.5816, -121.4944], 11);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    // Example service markers
+const providers = [
+  { name: "Mike Anderson - Plumbing", coords: [38.5816, -121.4944] },
+  { name: "Emily Chen - Tutoring", coords: [38.58, -121.48] },
+  { name: "David Green - Landscaping", coords: [38.44, -121.37] },
+];
+
+// Store markers in an object so we can access them later
+const markers = {};
+
+providers.forEach((p) => {
+  const marker = L.marker(p.coords).addTo(map).bindPopup(`<b>${p.name}</b>`);
+  markers[p.name] = marker;
+});
+
+// When user clicks a provider card, open its popup on the map
+document.querySelectorAll(".provider-card").forEach((card) => {
+  card.addEventListener("click", () => {
+    const name = card.querySelector("h4").textContent.trim();
+    const provider = providers.find((p) => name.includes(p.name.split(" - ")[1]));
+    if (provider && markers[provider.name]) {
+      map.setView(provider.coords, 13);
+      markers[provider.name].openPopup();
+    }
+  });
+});
+
+
+
+
+    // ✅ Add search bar
+    const geocoder = L.Control.geocoder({
+      defaultMarkGeocode: true
+    }).addTo(map);
+
+    // ✅ Manual search box integration (optional)
+    const searchInput = document.getElementById("searchInput");
+    searchInput.addEventListener("keypress", async (e) => {
+      if (e.key === "Enter") {
+        const query = searchInput.value.trim();
+        if (!query) return;
+
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`;
+        const response = await fetch(url);
+        const results = await response.json();
+
+        if (results && results.length > 0) {
+          const { lat, lon, display_name } = results[0];
+          map.setView([lat, lon], 13);
+          L.marker([lat, lon])
+            .addTo(map)
+            .bindPopup(`<b>${display_name}</b>`)
+            .openPopup();
+        } else {
+          alert("No results found!");
+        }
+      }
+    });
+
+    // ✅ Auto-size fix
+    setTimeout(() => map.invalidateSize(), 500);
+  });
+  </script>
+</body>
+</html>
