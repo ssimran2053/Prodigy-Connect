@@ -22,10 +22,17 @@
   },
   "homepage": "https://github.com/ssimran2053/Prodigy-Connect#readme",
   "dependencies": {
+    "@chakra-ui/react": "^3.29.0",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "mongoose": "^8.19.2"
-  },  
+    "framer-motion": "^12.23.24",
+    "mongoose": "^8.19.2",
+    "react-icons": "^5.5.0",
+    "react-router-dom": "^7.9.5",
+    "zustand": "^5.0.8"
+  },
   "devDependencies": {
     "nodemon": "^3.1.10"
   }
