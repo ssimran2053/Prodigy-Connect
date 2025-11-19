@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel • Prodigy Connect</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <div id="header"></div>
+
+  <div class="app">
+    <div id="sidebar"></div>
+
+    <main class="main-content">
+      <h2>Admin Panel</h2>
+      <p class="sub">Monitor and manage platform activity</p>
+
+      <div class="stats-grid">
+        <div class="stat-card"><h3>24</h3><p>Active Users</p></div>
+        <div class="stat-card"><h3>2</h3><p>Pending Reports</p></div>
+        <div class="stat-card"><h3>5</h3><p>Messages</p></div>
+      </div>
+
+      <div class="two-cols">
+        <div class="panel-box">
+          <h3>Recent Activity</h3>
+          <div class="panel-row"><span>New provider registered</span><span>2 mins ago</span></div>
+          <div class="panel-row"><span>Service booking completed</span><span>15 mins ago</span></div>
+          <div class="panel-row"><span>Report submitted</span><span>1 hour ago</span></div>
+        </div>
+        <div class="panel-box">
+          <h3>Platform Health</h3>
+          <div class="panel-row"><span>Provider Growth</span><span>+18%</span></div>
+          <div class="panel-row"><span>Seeker Engagement</span><span>+24%</span></div>
+          <div class="panel-row"><span>Booking Conversion</span><span>+12%</span></div>
+          <div class="panel-row"><span>Uptime</span><span>98%</span></div>
+        </div>
+      </div>
+
+      <div class="panel-box" style="margin-top:14px;">
+        <h3>Pending Reports</h3>
+        <div class="panel-row">
+          <span><strong>John Doe</strong> – Provider (High)</span>
+          <span><button class="btn btn--ghost btn--pill">Suspend</button></span>
+        </div>
+        <div class="panel-row">
+          <span><strong>Sarah Lee</strong> – Seeker (Medium)</span>
+          <span><button class="btn btn--ghost btn--pill">Suspend</button></span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="footer"></div>
+</body>
+</html>

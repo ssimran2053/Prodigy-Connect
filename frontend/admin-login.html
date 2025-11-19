@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Login • Prodigy Connect</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+
+  <div class="hero-bar">
+    <a class="btn btn--ghost btn--pill" href="index.html">← Back</a>
+  </div>
+
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div style="text-align:center;margin-bottom:6px;">
+        <div style="width:48px;height:48px;border-radius:12px;background:var(--primary-gradient);display:inline-block;"></div>
+      </div>
+
+      <h2>Admin Access</h2>
+
+      <form class="f">
+        <label>Admin Email
+          <input type="email" required />
+        </label>
+        <label>Password
+          <input type="password" required />
+        </label>
+        <label>Security Code
+          <input type="text" required />
+        </label>
+        <button class="btn-wide" type="submit">Sign in as Admin</button>
+      </form>
+
+      <p class="subtle"><a href="#">Forgot Password?</a></p>
+
+      <div style="margin-top:8px;text-align:center;">
+        <a class="btn btn--primary btn--pill" href="signup-admin.html">Create Admin Account</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer"></div>
+</body>
+</html>

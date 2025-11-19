@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login • Prodigy Connect</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/app.js" defer></script>
+  <script src="js/auth.js" defer></script>
+</head>
+<body>
+
+  <div class="hero-bar">
+    <a class="btn btn--ghost btn--pill" href="index.html">← Back</a>
+    <div class="hero-actions">
+      <a class="btn btn--ghost btn--pill" href="signup-seeker.html">Sign Up</a>
+    </div>
+  </div>
+
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h2>Welcome to Prodigy Connect</h2>
+
+      <div class="tabbar">
+        <a class="active" href="login.html">Login</a>
+        <a href="signup-seeker.html">Sign Up</a>
+      </div>
+
+      <form class="f">
+        <label>Email
+          <input type="email" required />
+        </label>
+        <label>Password
+          <input type="password" required />
+        </label>
+        <button class="btn-wide" type="submit">Sign In</button>
+      </form>
+
+      <p class="subtle"><a href="#">Forgot Password?</a></p>
+
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn-outline" type="button" onclick="location.href='signup-seeker.html'">
+          Demo as Seeker
+        </button>
+        <button class="btn-outline" type="button" onclick="location.href='signup-provider.html'">
+          Demo as Provider
+        </button>
+      </div>
+
+      <div style="margin-top:8px;">
+        <button class="btn-outline" type="button" onclick="location.href='signup-admin.html'">
+          Demo as Admin
+        </button>
+      </div>
+
+      <p class="subtle" style="margin-top:12px;">
+        Admin? <a href="admin-login.html">Go to Admin Login</a>
+      </p>
+    </div>
+  </div>
+
+  <div id="footer"></div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up – Service Seeker • Prodigy Connect</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/app.js" defer></script>
+  <script src="js/auth.js" defer></script>
+</head>
+<body>
+
+  <div class="hero-bar">
+    <a class="btn btn--ghost btn--pill" href="landing.html">← Back</a>
+    <div class="hero-actions">
+      <a class="btn btn--ghost btn--pill" href="login.html">Login</a>
+    </div>
+  </div>
+
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h2>Welcome to Prodigy Connect</h2>
+
+      <div class="tabbar">
+        <a href="login.html">Login</a>
+        <a class="active" href="signup-seeker.html">Sign Up</a>
+      </div>
+
+      <form class="f">
+        <label>Full Name
+          <input type="text" required />
+        </label>
+        <label>Email
+          <input type="email" required />
+        </label>
+        <label>Password
+          <input type="password" required />
+        </label>
+        <label>Location
+          <input type="text" placeholder="City, State" />
+        </label>
+        <label>Role
+          <select data-role>
+            <option value="seeker" selected>Service Seeker</option>
+          </select>
+        </label>
+
+        <div data-extra="seeker">
+          <label>Interests (optional)
+            <input type="text" placeholder="Tutoring, Landscaping…" />
+          </label>
+        </div>
+
+        <button class="btn-wide" type="submit">Sign Up</button>
+      </form>
+
+      <p class="subtle">Are you a provider? <a href="signup-provider.html">Sign up as provider</a></p>
+    </div>
+  </div>
+
+  <div id="footer"></div>
+</body>
+</html>
