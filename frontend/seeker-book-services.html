@@ -2,10 +2,44 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>ProdigyConnect – My Calendar</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prodigy Connect – Book Services</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="css/styles.css" />
   <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    .booking-details {
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:12px;
+      font-size:13px;
+    }
+    .time-slot-row {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .time-slot-btn {
+      border-radius:999px;
+      border:1px solid #e5e7eb;
+      background:#f9fafb;
+      padding:6px 12px;
+      font-size:12px;
+      cursor:pointer;
+    }
+    .time-slot-btn.active {
+      border-color:#6b4bff;
+      background:rgba(107,75,255,0.1);
+    }
+    .booking-summary {
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:#f9fafb;
+      font-size:12px;
+      color:#6b7280;
+    }
+  </style>
 </head>
 <body>
 <div class="app">
@@ -16,32 +50,36 @@
       <div class="logo-icon">P</div>
       <div class="logo-text">ProdigyConnect</div>
     </div>
-    <nav class="nav-section">
-      <div class="nav-item" onclick="location.href='index.html'">
+
+    <div class="nav-section">
+      <div class="nav-item" onclick="location.href='seeker-home.html'">
         <i data-feather="home"></i><span>Home</span>
       </div>
-      <div class="nav-item" onclick="location.href='posted-services.html'">
-        <i data-feather="briefcase"></i><span>Posted Services</span>
+      <div class="nav-item" onclick="location.href='seeker-browse-services.html'">
+        <i data-feather="search"></i><span>Browse Services</span>
       </div>
-      <div class="nav-item" onclick="location.href='requests.html'">
-        <i data-feather="file-text"></i><span>Requests</span>
+      <div class="nav-item" onclick="location.href='seeker-favorites.html'">
+        <i data-feather="heart"></i><span>Favorites</span>
       </div>
-      <div class="nav-item" onclick="location.href='messages.html'">
+      <div class="nav-item active" onclick="location.href='seeker-book-services.html'">
+        <i data-feather="calendar"></i><span>Book Services</span>
+      </div>
+      <div class="nav-item">
         <i data-feather="message-square"></i><span>Messages</span>
       </div>
-      <div class="nav-item active" onclick="location.href='calendar.html'">
-        <i data-feather="calendar"></i><span>My Calendar</span>
+      <div class="nav-item">
+        <i data-feather="book-open"></i><span>My Bookings</span>
       </div>
-      <div class="nav-item" onclick="location.href='payments.html'">
-        <i data-feather="credit-card"></i><span>Payments</span>
+      <div class="nav-item">
+        <i data-feather="map"></i><span>Map</span>
       </div>
-      <div class="nav-item" onclick="location.href='reviews.html'">
-        <i data-feather="star"></i><span>Reviews &amp; Ratings</span>
+      <div class="nav-item">
+        <i data-feather="filter"></i><span>Advanced Search</span>
       </div>
       <div class="nav-item" onclick="location.href='profile.html'">
         <i data-feather="user"></i><span>Profile</span>
       </div>
-    </nav>
+    </div>
   </aside>
 
   <!-- MAIN -->
@@ -49,13 +87,17 @@
     <!-- TOPBAR -->
     <header class="topbar">
       <div class="left">
-        <h1>Calendar</h1>
-        <span class="badge">Manage your schedule</span>
+        <h1>Prodigy Connect</h1>
+        <span class="badge">Seeker</span>
+        <div class="search-box">
+          <i data-feather="search"></i>
+          <input type="text" placeholder="Search providers..." />
+        </div>
       </div>
       <div class="right">
         <div class="profile-chip">
-          <div class="avatar">DP</div>
-          <span>Demo Provider</span>
+          <div class="avatar">D</div>
+          <span>Demo Seeker</span>
         </div>
       </div>
     </header>
@@ -64,14 +106,16 @@
     <main class="content">
       <div class="page-header">
         <div>
-          <h2>My Calendar</h2>
-          <div class="page-subtitle">Manage your appointments and schedule</div>
+          <h2>Book Services</h2>
+          <div class="page-subtitle">
+            Quick book appointments with Service Providers
+          </div>
         </div>
       </div>
 
-      <div class="calendar-layout">
-        <!-- Calendar column -->
-        <section class="calendar-card">
+      <div class="calendar-layout" style="margin-top:18px;">
+        <!-- Calendar -->
+        <div class="calendar-card">
           <div class="calendar-header">
             <h3>October 2025</h3>
             <div>
@@ -89,7 +133,6 @@
             <div class="calendar-day-name">Fr</div>
             <div class="calendar-day-name">Sa</div>
 
-            <!-- previous month -->
             <div class="calendar-day other-month">28</div>
             <div class="calendar-day other-month">29</div>
             <div class="calendar-day other-month">30</div>
@@ -103,7 +146,7 @@
             <div class="calendar-day" data-date="Oct 7, 2025">7</div>
             <div class="calendar-day" data-date="Oct 8, 2025">8</div>
             <div class="calendar-day" data-date="Oct 9, 2025">9</div>
-            <div class="calendar-day selected" data-date="Oct 14, 2025">14</div>
+            <div class="calendar-day selected" data-date="Oct 10, 2025">10</div>
             <div class="calendar-day" data-date="Oct 11, 2025">11</div>
 
             <div class="calendar-day" data-date="Oct 12, 2025">12</div>
@@ -130,40 +173,54 @@
             <div class="calendar-day" data-date="Oct 31, 2025">31</div>
             <div class="calendar-day other-month">1</div>
           </div>
+        </div>
 
-          <div style="margin-top:14px;font-size:12px;">
-            <span style="color:#16a34a;">● Confirmed</span>
-            &nbsp;&nbsp;
-            <span style="color:#f59e0b;">● Pending</span>
-            &nbsp;&nbsp;
-            <span style="color:#3b82f6;">● Completed</span>
-          </div>
-        </section>
+        <!-- Booking details -->
+        <div class="calendar-card">
+          <h3>Booking Details</h3>
+          <div class="booking-details">
+            <label>
+              Service
+              <select id="booking-service"
+                      style="width:100%;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;">
+                <option>Professional Plumbing Services</option>
+                <option>Math &amp; Science Tutoring</option>
+                <option>Web Development &amp; Design</option>
+                <option>Personal Fitness Training</option>
+              </select>
+            </label>
 
-        <!-- Appointments column -->
-        <section class="calendar-card">
-          <h3>Upcoming Appointments</h3>
-          <div class="appointments">
-            <h3>Appointments for Oct 14, 2025</h3>
-            <div class="appointment-card">
-              <strong>9:00 AM – Math Tutoring Session</strong>
-              <p>John Smith • Online via Zoom</p>
-              <p>Algebra I homework help</p>
+            <label>
+              Time Slot
+              <div class="time-slot-row">
+                <button class="time-slot-btn active" data-slot="9:00 AM">9:00 AM</button>
+                <button class="time-slot-btn" data-slot="11:00 AM">11:00 AM</button>
+                <button class="time-slot-btn" data-slot="2:00 PM">2:00 PM</button>
+                <button class="time-slot-btn" data-slot="4:00 PM">4:00 PM</button>
+              </div>
+            </label>
+
+            <label>
+              Duration
+              <select id="booking-duration"
+                      style="width:100%;padding:8px 10px;border-radius:10px;border:1px solid #e5e7eb;">
+                <option>1 hour</option>
+                <option>2 hours</option>
+                <option>Half day</option>
+              </select>
+            </label>
+
+            <div class="booking-summary" id="booking-summary">
+              Selected: <strong>Oct 10, 2025</strong>,
+              <strong>9:00 AM</strong>,
+              <strong>Professional Plumbing Services</strong>, 1 hour.
             </div>
-            <div class="appointment-card">
-              <strong>2:00 PM – Plumbing Service</strong>
-              <p>Sarah Johnson • On-site</p>
-              <p>Kitchen sink repair</p>
-            </div>
-          </div>
 
-          <div class="card" style="margin-top:16px;">
-            <h4>Booking Stats</h4>
-            <p>Total Bookings: <strong>4</strong></p>
-            <p>This Week: <strong>1</strong></p>
-            <p>Confirmed: <strong>3</strong></p>
+            <button class="primary-btn" type="button" onclick="alert('Demo only – booking not actually saved')">
+              Confirm Booking
+            </button>
           </div>
-        </section>
+        </div>
       </div>
     </main>
 
@@ -207,5 +264,40 @@
 
 <script>feather.replace();</script>
 <script src="js/app.js"></script>
+<script>
+  // simple time-slot + summary demo
+  const slotButtons = document.querySelectorAll(".time-slot-btn");
+  const summary = document.getElementById("booking-summary");
+  const serviceSelect = document.getElementById("booking-service");
+  const durationSelect = document.getElementById("booking-duration");
+  const calendarDays = document.querySelectorAll(".calendar-day[data-date]");
+  let selectedDate = "Oct 10, 2025";
+  let selectedSlot = "9:00 AM";
+
+  slotButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      slotButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      selectedSlot = btn.dataset.slot;
+      updateSummary();
+    });
+  });
+
+  calendarDays.forEach(day => {
+    day.addEventListener("click", () => {
+      calendarDays.forEach(d => d.classList.remove("selected"));
+      day.classList.add("selected");
+      selectedDate = day.dataset.date;
+      updateSummary();
+    });
+  });
+
+  function updateSummary() {
+    summary.innerHTML = `Selected: <strong>${selectedDate}</strong>,
+      <strong>${selectedSlot}</strong>,
+      <strong>${serviceSelect.value}</strong>,
+      ${durationSelect.value}.`;
+  }
+</script>
 </body>
 </html>

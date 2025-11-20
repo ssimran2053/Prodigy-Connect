@@ -86,3 +86,251 @@
   <div id="footer"></div>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Math Services Popup & Hovers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page">
+    <!-- View Reviews trigger -->
+    <section class="section">
+      <div class="section-header">
+        <div>View Reviews Math Services Pop Up</div>
+        <span>Demo</span>
+      </div>
+      <div class="top-bar">
+        <button class="gradient-btn blue" id="openModalBtn">
+          ★ View Reviews
+        </button>
+      </div>
+    </section>
+
+    <!-- Provider hover demo -->
+    <section class="section">
+      <div class="section-header">
+        <div>Demo Provider Hover</div>
+        <span>Hover states</span>
+      </div>
+      <div class="hover-grid">
+        <div class="hover-col">
+          <h4>Provider Home / Requests</h4>
+          <div class="hover-stack">
+            <button class="gradient-btn">Provider Home Hover</button>
+            <button class="gradient-btn">Provider Requests Hover</button>
+            <button class="gradient-btn">Provider Messages Hover</button>
+          </div>
+        </div>
+        <div class="hover-col">
+          <h4>Messaging</h4>
+          <div class="hover-stack">
+            <button class="gradient-btn">Provider Message Hover 1</button>
+            <button class="gradient-btn">Provider Message Hover 2</button>
+            <button class="gradient-btn">Provider Message Hover 3</button>
+          </div>
+        </div>
+        <div class="hover-col">
+          <h4>Payments</h4>
+          <div class="hover-stack">
+            <button class="gradient-btn">Provider Payment Tx Hover</button>
+            <button class="gradient-btn">Provider Payment Method Hover</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin hover demo -->
+    <section class="section">
+      <div class="section-header">
+        <div>Demo Admin Hover</div>
+        <span>Hover states</span>
+      </div>
+      <div class="hover-grid">
+        <div class="hover-col">
+          <h4>Admin Navigation</h4>
+          <div class="hover-stack">
+            <button class="gradient-btn">Admin Home Hover</button>
+            <button class="gradient-btn">Admin Browse Hover</button>
+            <button class="gradient-btn">Admin Panel Hover</button>
+          </div>
+        </div>
+        <div class="hover-col">
+          <h4>Admin Messages</h4>
+          <div class="hover-stack">
+            <button class="gradient-btn">Admin Message Hover 1</button>
+            <button class="gradient-btn">Admin Message Hover 2</button>
+            <button class="gradient-btn">Admin Message Hover 3</button>
+          </div>
+        </div>
+        <div class="hover-col">
+          <h4>Analytics</h4>
+          <div class="hover-stack">
+            <button class="gradient-btn">Revenue &amp; Booking Hover</button>
+            <button class="gradient-btn">User Growth Hover</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Landing / login / signup hover buttons -->
+    <section class="section">
+      <div class="section-header">
+        <div>Landing page and Login/Sign up Hover Buttons</div>
+        <span>Hover states</span>
+      </div>
+
+      <div class="hover-grid">
+        <div class="hover-col">
+          <h4>Find Services</h4>
+          <div class="hover-stack">
+            <button class="gradient-btn blue">Find Services</button>
+            <button class="gradient-btn">Sign Up</button>
+            <button class="btn-ghost">How It Works</button>
+          </div>
+        </div>
+
+        <div class="hover-col">
+          <h4>Offer Services</h4>
+          <div class="hover-stack">
+            <button class="gradient-btn blue">Offer Services</button>
+            <button class="gradient-btn">Create Free Account</button>
+          </div>
+        </div>
+
+        <div class="hover-col">
+          <h4>Role Selection Overlay</h4>
+          <div class="hover-stack">
+            <button class="btn-ghost">Service Seeker</button>
+            <button class="btn-ghost">Service Provider</button>
+            <button class="btn-ghost">Admin</button>
+          </div>
+        </div>
+
+        <div class="hover-col">
+          <h4>Auth Buttons</h4>
+          <div class="hover-stack">
+            <button class="gradient-btn blue">Sign Up (blue hover)</button>
+            <button class="gradient-btn">Admin Login</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modal-backdrop" id="reviewsModal">
+    <div class="modal">
+      <div class="modal-header-image">
+        <!-- Replace src with your own classroom image path -->
+        <img src="https://via.placeholder.com/1200x400?text=Classroom+Hero" alt="Classroom" />
+        <button class="modal-close" id="closeModalBtn" aria-label="Close">
+          ✕
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="pill">Education</div>
+
+        <div class="service-header">
+          <div>
+            <h2 class="service-title">Math &amp; Science Tutoring</h2>
+            <div class="service-location">
+              <span>📍</span>
+              <span>Sacramento, CA</span>
+            </div>
+          </div>
+
+          <div class="service-actions">
+            <div class="price">$40–60/hr</div>
+            <div class="save-link">♡ Save</div>
+          </div>
+        </div>
+
+        <div class="provider-row">
+          <div class="avatar">E</div>
+          <div class="provider-info">
+            <div class="provider-name">Emily Chen</div>
+            <div class="provider-rating">
+              <span class="star">★</span>
+              <span>5 • 89 reviews</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <div class="tab active" data-tab="details">Service Details</div>
+          <div class="tab" data-tab="reviews">Reviews (89)</div>
+        </div>
+
+        <div class="tab-panel active" id="tab-details">
+          <p>
+            Personalized math and science tutoring for middle and high school students.
+            Sessions are tailored to your curriculum and learning style.
+          </p>
+          <p>
+            Topics include algebra, geometry, precalculus, biology, chemistry, and physics.
+            Both online and in-person sessions available.
+          </p>
+          <p>
+            Emily has 8+ years of classroom experience and a Master's in Education.
+          </p>
+        </div>
+
+        <div class="tab-panel" id="tab-reviews">
+          <div class="rating-summary">
+            <div class="rating-score">
+              <div class="rating-score-main">5</div>
+              <div class="rating-stars">
+                <span>★ ★ ★ ★ ★</span>
+              </div>
+              <div class="rating-count">89 reviews</div>
+            </div>
+
+            <div class="rating-bars">
+              <div class="rating-row">
+                <div class="rating-row-label">5 star</div>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" style="width:96%"></div>
+                </div>
+                <div class="rating-row-count">85</div>
+              </div>
+              <div class="rating-row">
+                <div class="rating-row-label">4 star</div>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" style="width:8%"></div>
+                </div>
+                <div class="rating-row-count">4</div>
+              </div>
+              <div class="rating-row">
+                <div class="rating-row-label">3 star</div>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" style="width:0%"></div>
+                </div>
+                <div class="rating-row-count">0</div>
+              </div>
+              <div class="rating-row">
+                <div class="rating-row-label">2 star</div>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" style="width:0%"></div>
+                </div>
+                <div class="rating-row-count">0</div>
+              </div>
+              <div class="rating-row">
+                <div class="rating-row-label">1 star</div>
+                <div class="rating-bar">
+                  <div class="rating-bar-fill" style="width:0%"></div>
+                </div>
+                <div class="rating-row-count">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

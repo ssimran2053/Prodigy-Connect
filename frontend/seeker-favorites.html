@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prodigy Connect – My Favorites</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    .favorite-heart {
+      border: none;
+      background: #ffffff;
+      border-radius: 999px;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.12);
+      cursor: pointer;
+      font-size: 14px;
+      color: #ef4444;
+    }
+    .favorites-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:16px;
+      margin-top:8px;
+    }
+    .service-card-header-row {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:4px;
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">P</div>
+      <div class="logo-text">ProdigyConnect</div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-item" onclick="location.href='seeker-home.html'">
+        <i data-feather="home"></i><span>Home</span>
+      </div>
+      <div class="nav-item" onclick="location.href='seeker-browse-services.html'">
+        <i data-feather="search"></i><span>Browse Services</span>
+      </div>
+      <div class="nav-item active" onclick="location.href='seeker-favorites.html'">
+        <i data-feather="heart"></i><span>Favorites</span>
+      </div>
+      <div class="nav-item" onclick="location.href='seeker-book-services.html'">
+        <i data-feather="calendar"></i><span>Book Services</span>
+      </div>
+      <div class="nav-item">
+        <i data-feather="message-square"></i><span>Messages</span>
+      </div>
+      <div class="nav-item">
+        <i data-feather="book-open"></i><span>My Bookings</span>
+      </div>
+      <div class="nav-item">
+        <i data-feather="map"></i><span>Map</span>
+      </div>
+      <div class="nav-item">
+        <i data-feather="filter"></i><span>Advanced Search</span>
+      </div>
+      <div class="nav-item" onclick="location.href='profile.html'">
+        <i data-feather="user"></i><span>Profile</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="left">
+        <h1>Prodigy Connect</h1>
+        <span class="badge">Seeker</span>
+        <div class="search-box">
+          <i data-feather="search"></i>
+          <input type="text" placeholder="Search favorites..." />
+        </div>
+      </div>
+      <div class="right">
+        <div class="profile-chip">
+          <div class="avatar">D</div>
+          <span>Demo Seeker</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT -->
+    <main class="content">
+      <div class="page-header">
+        <div>
+          <h2>My Favorites</h2>
+          <div class="page-subtitle">
+            Services you’ve saved for later
+          </div>
+        </div>
+      </div>
+
+      <!-- Search/filter row -->
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;margin-bottom:12px;">
+        <div class="search-box" style="max-width:360px;">
+          <i data-feather="search"></i>
+          <input type="text" placeholder="Search favorites..." />
+        </div>
+        <div>
+          <select style="padding:8px 10px;border-radius:999px;border:1px solid #e5e7eb;font-size:13px;">
+            <option>All Categories</option>
+            <option>Home Services</option>
+            <option>Education</option>
+            <option>Tech Services</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Favorites list -->
+      <section id="favorites-list" class="favorites-grid">
+        <!-- Plumbing favorite -->
+        <article class="service-card">
+          <div class="service-top">
+            <img src="https://images.unsplash.com/photo-1581090700227-1e37b190418e?q=80&w=800&auto=format&fit=crop"
+                 class="service-thumb" alt="Plumbing" />
+            <div class="service-info">
+              <div class="service-card-header-row">
+                <h3>Professional Plumbing Services</h3>
+                <button class="favorite-heart" data-favorite-toggle>&hearts;</button>
+              </div>
+              <p class="service-desc">
+                Expert repairs, installations, and maintenance from 15+ years experience.
+              </p>
+              <div class="service-meta">
+                <span class="price">$75–150/hr</span>
+                <span class="status active">Home Services • Sacramento, CA</span>
+              </div>
+            </div>
+          </div>
+          <div class="service-actions" style="justify-content:flex-end;">
+            <button class="btn-outline">View Details</button>
+          </div>
+        </article>
+
+        <!-- Landscaping favorite -->
+        <article class="service-card">
+          <div class="service-top">
+            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?q=80&w=800&auto=format&fit=crop"
+                 class="service-thumb" alt="Landscape" />
+            <div class="service-info">
+              <div class="service-card-header-row">
+                <h3>Garden &amp; Landscape Design</h3>
+                <button class="favorite-heart" data-favorite-toggle>&hearts;</button>
+              </div>
+              <p class="service-desc">
+                Transform your outdoor space with professional landscaping services.
+              </p>
+              <div class="service-meta">
+                <span class="price">$500–2000</span>
+                <span class="status active">Home Services • Elk Grove, CA</span>
+              </div>
+            </div>
+          </div>
+          <div class="service-actions" style="justify-content:flex-end;">
+            <button class="btn-outline">View Details</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- Empty state (hidden at first) -->
+      <section id="favorites-empty" class="card" style="text-align:center;display:none;margin-top:24px;">
+        <h3>No saved favorites yet</h3>
+        <p class="page-subtitle" style="margin:6px 0 14px;">
+          Browse services to save some!
+        </p>
+        <button class="primary-btn" onclick="location.href='seeker-browse-services.html'">
+          Browse Services
+        </button>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-left">
+        <div class="logo-icon small">P</div>
+        <div>
+          <div class="footer-brand">Prodigy Connect</div>
+          <div class="footer-subtitle">
+            Connecting communities through trusted local services
+          </div>
+        </div>
+      </div>
+      <div class="footer-columns">
+        <div class="footer-col">
+          <div class="footer-heading">Platform</div>
+          <a href="#">Browse Services</a>
+          <a href="#">Become a Provider</a>
+          <a href="#">How It Works</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-heading">Company</div>
+          <a href="#">About Us</a>
+          <a href="#">Contact</a>
+          <a href="#">Careers</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-heading">Legal</div>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+      <div class="footer-right">
+        © 2025 Prodigy Connect. All rights reserved.
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script>feather.replace();</script>
+<script src="js/app.js"></script>
+<script>
+  // Unfavorite: remove card, show empty state when none left
+  const favoritesList = document.getElementById("favorites-list");
+  const emptyState = document.getElementById("favorites-empty");
+
+  function checkEmpty() {
+    const hasCards = favoritesList.querySelector(".service-card");
+    emptyState.style.display = hasCards ? "none" : "block";
+  }
+
+  favoritesList.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-favorite-toggle]");
+    if (!btn) return;
+
+    const card = btn.closest(".service-card");
+    if (card) {
+      card.remove();
+      checkEmpty();
+    }
+  });
+</script>
+</body>
+</html>

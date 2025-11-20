@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ProdigyConnect - My Bookings (Seeker)</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">P</div>
+      <div class="logo-text">ProdigyConnect</div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-item" onclick="location.href='seeker-home.html'">
+        <i data-feather="home"></i><span>Home</span>
+      </div>
+      <div class="nav-item" onclick="location.href='seeker-browse-services.html'">
+        <i data-feather="search"></i><span>Browse Services</span>
+      </div>
+      <div class="nav-item" onclick="location.href='seeker-favorites.html'">
+        <i data-feather="heart"></i><span>Favorites</span>
+      </div>
+      <div class="nav-item" onclick="location.href='seeker-book-services.html'">
+        <i data-feather="calendar"></i><span>Book Services</span>
+      </div>
+      <div class="nav-item" onclick="location.href='seeker-messages.html'">
+        <i data-feather="message-square"></i><span>Messages</span>
+      </div>
+      <div class="nav-item active" onclick="location.href='seeker-bookings.html'">
+        <i data-feather="check-square"></i><span>My Bookings</span>
+      </div>
+      <div class="nav-item" onclick="location.href='map.html'">
+        <i data-feather="map"></i><span>Map</span>
+      </div>
+      <div class="nav-item" onclick="location.href='profile.html'">
+        <i data-feather="user"></i><span>Profile</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="left">
+        <h1>My Bookings</h1>
+      </div>
+      <div class="right">
+        <div class="profile-chip">
+          <div class="avatar">D</div><span>Demo Seeker</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="page-header">
+        <div>
+          <h2>My Bookings</h2>
+          <div class="page-subtitle">View and manage your scheduled appointments</div>
+        </div>
+      </div>
+
+      <div class="calendar-layout">
+        <!-- Calendar (uses same .calendar-day classes so it can share JS if you want) -->
+        <div class="calendar-card">
+          <div class="calendar-header">
+            <h3>October 2025</h3>
+            <div>
+              <button class="btn-outline">&lt;</button>
+              <button class="btn-outline">&gt;</button>
+            </div>
+          </div>
+
+          <div class="calendar-grid">
+            <div class="calendar-day-name">Su</div>
+            <div class="calendar-day-name">Mo</div>
+            <div class="calendar-day-name">Tu</div>
+            <div class="calendar-day-name">We</div>
+            <div class="calendar-day-name">Th</div>
+            <div class="calendar-day-name">Fr</div>
+            <div class="calendar-day-name">Sa</div>
+
+            <div class="calendar-day other-month">28</div>
+            <div class="calendar-day other-month">29</div>
+            <div class="calendar-day other-month">30</div>
+            <div class="calendar-day">1</div>
+            <div class="calendar-day">2</div>
+            <div class="calendar-day">3</div>
+            <div class="calendar-day">4</div>
+
+            <div class="calendar-day">5</div>
+            <div class="calendar-day">6</div>
+            <div class="calendar-day">7</div>
+            <div class="calendar-day">8</div>
+            <div class="calendar-day">9</div>
+            <div class="calendar-day selected">10</div>
+            <div class="calendar-day">11</div>
+
+            <div class="calendar-day">12</div>
+            <div class="calendar-day">13</div>
+            <div class="calendar-day">14</div>
+            <div class="calendar-day">15</div>
+            <div class="calendar-day">16</div>
+            <div class="calendar-day">17</div>
+            <div class="calendar-day">18</div>
+
+            <div class="calendar-day">19</div>
+            <div class="calendar-day">20</div>
+            <div class="calendar-day">21</div>
+            <div class="calendar-day">22</div>
+            <div class="calendar-day">23</div>
+            <div class="calendar-day">24</div>
+            <div class="calendar-day">25</div>
+
+            <div class="calendar-day">26</div>
+            <div class="calendar-day">27</div>
+            <div class="calendar-day">28</div>
+            <div class="calendar-day">29</div>
+            <div class="calendar-day">30</div>
+            <div class="calendar-day">31</div>
+            <div class="calendar-day other-month">1</div>
+          </div>
+
+          <div class="calendar-legend">
+            <span class="dot confirmed"></span>Confirmed
+            <span class="dot pending"></span>Pending
+            <span class="dot completed"></span>Completed
+          </div>
+        </div>
+
+        <!-- Upcoming appointments -->
+        <div class="calendar-card">
+          <h3>Upcoming Appointments</h3>
+
+          <div class="appointment-card">
+            <strong>House Cleaning Service</strong>
+            <div class="appointment-meta">
+              <span>10/12/25 • 9:00 AM • 3 hours</span>
+              <span>Kelly Brown</span>
+            </div>
+            <div class="badge-paid">Confirmed</div>
+          </div>
+
+          <div class="appointment-card">
+            <strong>Math Tutoring Session</strong>
+            <div class="appointment-meta">
+              <span>10/14/25 • 5:00 PM • 2 hours</span>
+              <span>Riley Chen</span>
+            </div>
+            <div class="badge-paid">Confirmed</div>
+          </div>
+
+          <div class="appointment-card">
+            <strong>Personal Training</strong>
+            <div class="appointment-meta">
+              <span>10/16/25 • 7:00 AM • 1 hour</span>
+              <span>Alex Johnson</span>
+            </div>
+            <div class="badge-pending">Pending</div>
+          </div>
+
+          <div class="booking-stats">
+            <h4>Booking Stats</h4>
+            <p>Total Bookings: <strong>4</strong></p>
+            <p>This Week: <strong>1</strong></p>
+            <p>Confirmed: <strong>3</strong></p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>feather.replace();</script>
+<script src="js/app.js"></script>
+</body>
+</html>

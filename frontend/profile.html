@@ -1,54 +1,172 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Profile • Admin • Prodigy Connect</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <script src="js/app.js" defer></script>
+  <meta charset="UTF-8" />
+  <title>ProdigyConnect – Provider Profile</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body>
-  <div id="header"></div>
+<div class="app">
 
-  <div class="app">
-    <div id="sidebar"></div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-icon">P</div>
+      <div class="logo-text">ProdigyConnect</div>
+    </div>
+    <nav class="nav-section">
+      <div class="nav-item" onclick="location.href='index.html'">
+        <i data-feather="home"></i><span>Home</span>
+      </div>
+      <div class="nav-item" onclick="location.href='posted-services.html'">
+        <i data-feather="briefcase"></i><span>Posted Services</span>
+      </div>
+      <div class="nav-item" onclick="location.href='requests.html'">
+        <i data-feather="file-text"></i><span>Requests</span>
+      </div>
+      <div class="nav-item" onclick="location.href='messages.html'">
+        <i data-feather="message-square"></i><span>Messages</span>
+      </div>
+      <div class="nav-item" onclick="location.href='calendar.html'">
+        <i data-feather="calendar"></i><span>My Calendar</span>
+      </div>
+      <div class="nav-item" onclick="location.href='payments.html'">
+        <i data-feather="credit-card"></i><span>Payments</span>
+      </div>
+      <div class="nav-item" onclick="location.href='reviews.html'">
+        <i data-feather="star"></i><span>Reviews &amp; Ratings</span>
+      </div>
+      <div class="nav-item active" onclick="location.href='profile.html'">
+        <i data-feather="user"></i><span>Profile</span>
+      </div>
+    </nav>
+  </aside>
 
-    <main class="main-content">
-      <h2>Admin Profile</h2>
-      <p class="sub">Manage your admin account and permissions</p>
-
-      <div class="profile-card">
-        <div class="profile-header">
-          <div class="profile-avatar"></div>
-          <div>
-            <h3>Demo Admin</h3>
-            <div class="profile-meta">Sacramento, CA • Super Admin</div>
-          </div>
+  <!-- MAIN -->
+  <div class="main">
+    <header class="topbar">
+      <div class="left">
+        <h1>Profile</h1>
+        <span class="badge">Provider</span>
+      </div>
+      <div class="right">
+        <div class="profile-chip">
+          <div class="avatar">DP</div><span>Demo Provider</span>
         </div>
-        <button class="btn btn--ghost btn--pill">Edit Profile</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-header">
+        <h2>Demo Provider</h2>
+        <div class="page-subtitle">Manage your public profile and service details</div>
       </div>
 
-      <div class="profile-section">
-        <h3>About Me</h3>
-        <p>
-          Platform administrator responsible for managing Prodigy Connect operations,
-          user support, and content moderation.
-        </p>
-      </div>
+      <div class="profile-layout">
+        <!-- Left main card -->
+        <section class="profile-card-main">
+          <div class="profile-header-main">
+            <div class="profile-avatar-big">DP</div>
+            <div>
+              <h3>Demo Provider</h3>
+              <div class="page-subtitle">
+                Sacramento, CA · Top Rated
+              </div>
+              <div style="margin-top:6px;font-size:13px;">
+                <span style="color:#f59e0b;">★ 4.9</span> (47 reviews) ·
+                <span>347 jobs completed</span> ·
+                <span>Avg response &lt; 2 hours</span>
+              </div>
+            </div>
+          </div>
 
-      <div class="profile-section">
-        <h3>Admin Permissions</h3>
-        <p>
-          • User Management<br>
-          • Content Moderation<br>
-          • Analytics Access<br>
-          • System Configuration<br>
-          • Support Management
-        </p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">
+            <button class="btn-outline">Change Photo</button>
+            <button class="btn-edit">Edit Profile</button>
+          </div>
+
+          <h4>About Me</h4>
+          <p class="page-subtitle">
+            Professional service provider with over 15 years of experience. Committed to delivering
+            high-quality work and excellent customer service. I focus on clear communication,
+            reliable scheduling, and a clean, safe work environment on every job.
+          </p>
+
+          <h4 style="margin-top:14px;">Skills &amp; Certifications</h4>
+          <p>
+            <span class="status active">Licensed &amp; Certified</span>
+            <span class="status active">Emergency Services</span>
+            <span class="status active">Free Estimates</span>
+            <span class="status active">Satisfaction Guaranteed</span>
+          </p>
+
+          <h4 style="margin-top:14px;">Service Area</h4>
+          <p>
+            <strong>Primary Location:</strong> Sacramento, CA<br>
+            <strong>Service Radius:</strong> 30 miles
+          </p>
+        </section>
+
+        <!-- Right side card -->
+        <section class="profile-card-side">
+          <h3>Quick Stats</h3>
+          <p>Average Rating: <strong>4.9 / 5</strong></p>
+          <p>Total Reviews: <strong>47</strong></p>
+          <p>Repeat Clients: <strong>62%</strong></p>
+
+          <h3 style="margin-top:16px;">Availability</h3>
+          <p>Mon – Fri: 9:00 AM – 6:00 PM</p>
+          <p>Sat: 10:00 AM – 4:00 PM</p>
+          <p>Sun: Closed</p>
+
+          <h3 style="margin-top:16px;">Contact</h3>
+          <p>Email: demo.provider@example.com</p>
+          <p>Phone: (555) 555-1234</p>
+        </section>
       </div>
     </main>
-  </div>
 
-  <div id="footer"></div>
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-left">
+        <div class="logo-icon small">P</div>
+        <div>
+          <div class="footer-brand">Prodigy Connect</div>
+          <div class="footer-subtitle">
+            Connecting communities through trusted local services
+          </div>
+        </div>
+      </div>
+      <div class="footer-columns">
+        <div class="footer-col">
+          <div class="footer-heading">Platform</div>
+          <a href="#">Browse Services</a>
+          <a href="#">Become a Provider</a>
+          <a href="#">How It Works</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-heading">Company</div>
+          <a href="#">About Us</a>
+          <a href="#">Contact</a>
+          <a href="#">Careers</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-heading">Legal</div>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+      <div class="footer-right">
+        © 2025 Prodigy Connect. All rights reserved.
+      </div>
+    </footer>
+  </div>
+</div>
+
+<script>feather.replace();</script>
+<script src="js/app.js"></script>
 </body>
 </html>

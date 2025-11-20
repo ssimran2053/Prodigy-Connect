@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ProdigyConnect - Payments</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8" />
+  <title>ProdigyConnect – Payments & Billing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/styles.css" />
   <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body>
 <div class="app">
 
   <!-- SIDEBAR -->
-  <div class="sidebar">
+  <aside class="sidebar">
     <div class="logo">
       <div class="logo-icon">P</div>
       <div class="logo-text">ProdigyConnect</div>
     </div>
-    <div class="nav-section">
+    <nav class="nav-section">
       <div class="nav-item" onclick="location.href='index.html'">
-        <i data-feather="home"></i><span>Dashboard</span>
+        <i data-feather="home"></i><span>Home</span>
       </div>
       <div class="nav-item" onclick="location.href='posted-services.html'">
         <i data-feather="briefcase"></i><span>Posted Services</span>
@@ -30,84 +30,168 @@
         <i data-feather="message-square"></i><span>Messages</span>
       </div>
       <div class="nav-item" onclick="location.href='calendar.html'">
-        <i data-feather="calendar"></i><span>Calendar</span>
+        <i data-feather="calendar"></i><span>My Calendar</span>
       </div>
       <div class="nav-item active" onclick="location.href='payments.html'">
         <i data-feather="credit-card"></i><span>Payments</span>
       </div>
+      <div class="nav-item" onclick="location.href='reviews.html'">
+        <i data-feather="star"></i><span>Reviews &amp; Ratings</span>
+      </div>
       <div class="nav-item" onclick="location.href='profile.html'">
         <i data-feather="user"></i><span>Profile</span>
       </div>
-    </div>
-  </div>
+    </nav>
+  </aside>
 
   <!-- MAIN -->
   <div class="main">
-    <div class="topbar">
+    <header class="topbar">
       <div class="left">
-        <h1>Payments</h1>
-        <span class="badge">$576 total</span>
+        <h1>Payments &amp; Billing</h1>
+        <span class="badge">Manage your earnings</span>
       </div>
       <div class="right">
+        <button class="primary-btn">Request Payout</button>
         <div class="profile-chip">
-          <div class="avatar">A</div><span>John Doe</span>
+          <div class="avatar">DP</div><span>Demo Provider</span>
         </div>
       </div>
-    </div>
+    </header>
 
-    <div class="content">
+    <main class="content">
       <div class="page-header">
-        <h2>Payment History</h2>
-        <div class="page-subtitle">Track your earnings and payouts</div>
+        <div>
+          <h2>Payments &amp; Billing</h2>
+          <div class="page-subtitle">Manage your earnings and payment methods</div>
+        </div>
       </div>
 
-      <div class="card payments-card">
-        <table class="payments-table">
+      <!-- Summary cards -->
+      <div class="summary-row">
+        <div class="summary-card">
+          <div class="label">Total Earnings</div>
+          <div class="value">$410.00</div>
+          <div class="page-subtitle">This month</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Pending</div>
+          <div class="value">$450.00</div>
+          <div class="page-subtitle">Processing</div>
+        </div>
+        <div class="summary-card">
+          <div class="label">Available</div>
+          <div class="value">$734.50</div>
+          <div class="page-subtitle">Ready for payout</div>
+        </div>
+      </div>
+
+      <!-- Transactions -->
+      <section class="card payments-card" style="margin-top:20px;">
+        <h3>Recent Transactions</h3>
+        <table class="payments-table" style="margin-top:12px;">
           <thead>
           <tr>
             <th>Date</th>
+            <th>Description</th>
             <th>Customer</th>
-            <th>Service</th>
-            <th>Amount</th>
             <th>Status</th>
+            <th>Amount</th>
           </tr>
           </thead>
           <tbody>
           <tr>
-            <td>Feb 13, 2025</td>
+            <td>2025-10-08</td>
+            <td>Plumbing Service</td>
+            <td>Sarah Johnson</td>
+            <td><span class="badge-paid">Completed</span></td>
+            <td>+ $150.00</td>
+          </tr>
+          <tr>
+            <td>2025-10-07</td>
+            <td>Math Tutoring Session</td>
             <td>John Smith</td>
-            <td>Driveway Pressure Wash</td>
-            <td>$75</td>
-            <td><span class="badge-paid">Paid</span></td>
+            <td><span class="badge-paid">Completed</span></td>
+            <td>+ $80.00</td>
           </tr>
           <tr>
-            <td>Feb 11, 2025</td>
-            <td>Eva Diaz</td>
-            <td>Pool Cleaning</td>
-            <td>$50</td>
-            <td><span class="badge-paid">Paid</span></td>
+            <td>2025-10-06</td>
+            <td>Platform Commission Fee</td>
+            <td>Prodigy Connect</td>
+            <td><span class="badge-paid">Completed</span></td>
+            <td style="color:#b91c1c;">- $25.50</td>
           </tr>
           <tr>
-            <td>Feb 09, 2025</td>
-            <td>Carl Max</td>
-            <td>Gutter Cleaning</td>
-            <td>$120</td>
-            <td><span class="badge-paid">Paid</span></td>
-          </tr>
-          <tr>
-            <td>Feb 07, 2025</td>
-            <td>Michael Ray</td>
-            <td>House Exterior Painting</td>
-            <td>$331</td>
+            <td>2025-10-05</td>
+            <td>Web Development Project</td>
+            <td>Acme Co.</td>
             <td><span class="badge-pending">Pending</span></td>
+            <td>+ $60.00</td>
+          </tr>
+          <tr>
+            <td>2025-10-04</td>
+            <td>Landscaping Service</td>
+            <td>Michael Lee</td>
+            <td><span class="badge-paid">Completed</span></td>
+            <td>+ $200.00</td>
           </tr>
           </tbody>
         </table>
+      </section>
+
+      <!-- Payment methods -->
+      <section class="card payments-card" style="margin-top:20px;">
+        <h3>Payment Methods</h3>
+        <div style="margin-top:12px;">
+          <div class="appointment-card">
+            <strong>Visa •••• 4242</strong>
+            <p>Expires 12/25 · Default</p>
+          </div>
+          <div class="appointment-card">
+            <strong>Mastercard •••• 8888</strong>
+            <p>Expires 08/26</p>
+          </div>
+          <button class="primary-btn" style="margin-top:10px;">+ Add Card</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-left">
+        <div class="logo-icon small">P</div>
+        <div>
+          <div class="footer-brand">Prodigy Connect</div>
+          <div class="footer-subtitle">
+            Connecting communities through trusted local services
+          </div>
+        </div>
       </div>
-
-    </div>
+      <div class="footer-columns">
+        <div class="footer-col">
+          <div class="footer-heading">Platform</div>
+          <a href="#">Browse Services</a>
+          <a href="#">Become a Provider</a>
+          <a href="#">How It Works</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-heading">Company</div>
+          <a href="#">About Us</a>
+          <a href="#">Contact</a>
+          <a href="#">Careers</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-heading">Legal</div>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+      <div class="footer-right">
+        © 2025 Prodigy Connect. All rights reserved.
+      </div>
+    </footer>
   </div>
-
 </div>
 
 <script>feather.replace();</script>
