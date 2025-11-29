@@ -6,6 +6,28 @@
   </div>
   <div class="right">
     <span>Demo Admin</span>
+
+    <!-- Notifications UI -->
+    <div class="notif-wrapper">
+      <button class="notif-bell" id="notifBellBtn" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" class="notif-bell-icon" aria-hidden="true">
+          <path d="M12 2a6 6 0 0 0-6 6v3.5L4 14v1h16v-1l-2-2.5V8a6 6 0 0 0-6-6zm0 20a2.5 2.5 0 0 0 2.45-2h-4.9A2.5 2.5 0 0 0 12 22z"></path>
+        </svg>
+        <span class="notif-badge" id="notifBadge" hidden>0</span>
+      </button>
+
+      <div class="notif-dropdown" id="notifDropdown" aria-label="Notifications panel">
+        <div class="notif-header">
+          <span>Notifications</span>
+          <button class="notif-mark-all" id="notifMarkAllBtn">Mark all as seen</button>
+        </div>
+        <div class="notif-list" id="notifList">
+          <div class="notif-empty">No notifications yet.</div>
+        </div>
+      </div>
+    </div>
+    <!-- /Notifications UI -->
+
     <div class="avatar"></div>
   </div>
 </header>

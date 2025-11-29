@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Provider Availability • Prodigy Connect</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/app.js" defer></script>
+  <script src="js/provider-appointments.js" defer></script>
+</head>
+<body>
+  <div id="header"></div>
+
+  <div class="app">
+    <div id="sidebar"></div>
+
+    <main class="main-content">
+      <h2>Provider Availability</h2>
+      <p class="sub">Set up the time slots when you are available for appointments.</p>
+
+      <div class="slot-picker">
+        <div class="slot-picker-row">
+          <div>
+            <label for="slotDate">Date</label>
+            <input type="date" id="slotDate" />
+          </div>
+          <div>
+            <label for="slotStart">Start time</label>
+            <input type="time" id="slotStart" />
+          </div>
+          <div>
+            <label for="slotEnd">End time</label>
+            <input type="time" id="slotEnd" />
+          </div>
+          <div class="slot-picker-actions">
+            <button class="btn btn--primary" id="addSlotBtn">Add time slot</button>
+          </div>
+        </div>
+
+        <h3 style="margin-top:16px;">Upcoming Availability</h3>
+        <p class="sub">These slots will be visible to service seekers when booking.</p>
+
+        <div id="slotList" class="slot-list">
+          <!-- JS will add slot items here -->
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div id="footer"></div>
+</body>
+</html>
