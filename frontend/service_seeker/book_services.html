@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book Services | Prodigy Connect</title>
+  <link rel="stylesheet" href="SS_style.css" />
+</head>
+<body>
+  <!-- ======= SIDEBAR ======= -->
+  <nav class="sidebar">
+    <h2 class="logo">Prodigy Connect</h2>
+    <ul class="nav-links">
+      <li><a href="/service_seeker/service_seeker.html">Home</a></li>
+      <li><a href="/service_seeker/browse_services.html">Browse Services</a></li>
+      <li><a href="/service_seeker/favorites.html">Favorites</a></li>
+      <li class="active"><a href="/service_seeker/book_services.html">Book Services</a></li>
+      <li><a href="/service_seeker/messages.html">Messages</a></li>
+      <li><a href="/service_seeker/my_bookings.html">My Bookings</a></li>
+      <li><a href="/service_seeker/map.html">Map</a></li>
+      <li><a href="/service_seeker/advanced_search.html">Advanced Search</a></li>
+      <li><a href="/service_seeker/profile.html">Profile</a></li>
+    </ul>
+  </nav>
+
+  <!-- ======= MAIN CONTENT ======= -->
+  <main class="main-content">
+    <header class="header">
+      <div>
+        <h1>Book Services</h1>
+        <p>Quick book appointments with Service Providers</p>
+      </div>
+      <div class="user-info">
+        <span class="user-name">Demo User</span>
+        <span class="user-location">Sacramento, CA</span>
+      </div>
+    </header>
+
+    <!-- ======= BOOKING LAYOUT (Calendar + Details + Map space) ======= -->
+    <section class="booking-layout">
+      <!-- LEFT: Calendar -->
+      <section class="booking-card">
+        <h2 class="booking-section-title">Select Date &amp; Time</h2>
+
+        <!-- Calendar header (month + arrows) -->
+        <div class="calendar-header">
+          <button class="cal-nav">&lt;</button>
+          <span class="calendar-month">October 2025</span>
+          <button class="cal-nav">&gt;</button>
+        </div>
+
+        <!-- Weekday labels -->
+        <div class="calendar-weekdays">
+          <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+
+        <!-- Simple static calendar grid
+             Later you can generate this from JS / DB if you want -->
+        <div class="calendar-grid">
+          <span class="calendar-day empty"></span>
+          <span class="calendar-day empty"></span>
+          <span class="calendar-day empty"></span>
+          <span class="calendar-day empty"></span>
+          <span class="calendar-day empty"></span>
+          <span class="calendar-day">1</span>
+          <span class="calendar-day">2</span>
+
+          <span class="calendar-day">3</span>
+          <span class="calendar-day">4</span>
+          <span class="calendar-day">5</span>
+          <span class="calendar-day">6</span>
+          <span class="calendar-day">7</span>
+          <span class="calendar-day">8</span>
+          <span class="calendar-day">9</span>
+
+          <span class="calendar-day">10</span>
+          <span class="calendar-day">11</span>
+          <span class="calendar-day">12</span>
+          <span class="calendar-day">13</span>
+          <span class="calendar-day">14</span>
+          <span class="calendar-day">15</span>
+          <span class="calendar-day">16</span>
+
+          <span class="calendar-day">17</span>
+          <span class="calendar-day">18</span>
+          <span class="calendar-day">19</span>
+          <span class="calendar-day">20</span>
+          <span class="calendar-day">21</span>
+          <span class="calendar-day">22</span>
+          <span class="calendar-day">23</span>
+
+          <span class="calendar-day">24</span>
+          <span class="calendar-day">25</span>
+          <span class="calendar-day">26</span>
+          <span class="calendar-day">27</span>
+          <span class="calendar-day">28</span>
+          <span class="calendar-day">29</span>
+          <span class="calendar-day">30</span>
+
+          <span class="calendar-day">31</span>
+          <span class="calendar-day empty"></span>
+          <span class="calendar-day empty"></span>
+          <span class="calendar-day empty"></span>
+          <span class="calendar-day empty"></span>
+          <span class="calendar-day empty"></span>
+          <span class="calendar-day empty"></span>
+        </div>
+      </section>
+
+      <!-- RIGHT: Booking details + map placeholder -->
+      <section class="booking-right-column">
+        <!-- Booking details card -->
+        <section class="booking-details-card">
+          <h2 class="booking-section-title">Booking Details</h2>
+
+          <!-- Service dropdown -->
+          <div class="booking-field">
+            <label for="serviceSelect">Service</label>
+            <!-- Later you can fill this with services from MongoDB -->
+            <select id="serviceSelect">
+              <option>Plumbing Services</option>
+              <option>Math &amp; Science Tutoring</option>
+              <option>Garden &amp; Landscape Design</option>
+              <option>Web Development &amp; Design</option>
+              <option>Personal Fitness Training</option>
+            </select>
+          </div>
+
+          <!-- Time slot pills -->
+          <div class="booking-field">
+            <label>Time Slot</label>
+            <div class="time-slots">
+              <button class="time-slot">9:00 AM</button>
+              <button class="time-slot">11:00 AM</button>
+              <button class="time-slot">2:00 PM</button>
+              <button class="time-slot">4:00 PM</button>
+            </div>
+          </div>
+
+          <!-- Duration -->
+          <div class="booking-field">
+            <label for="durationSelect">Duration</label>
+            <select id="durationSelect">
+              <option>30 minutes</option>
+              <option>1 hour</option>
+              <option>1.5 hours</option>
+              <option>2 hours</option>
+            </select>
+          </div>
+
+          <!-- Confirm button -->
+          <div class="booking-actions">
+            <button class="confirm-booking-btn">
+              <!-- just icon text, no real icon yet -->
+              ✓ Confirm Booking
+            </button>
+          </div>
+        </section>
+
+        <!-- Map placeholder (for later map API / MongoDB integration) -->
+        <section id="booking-map">
+          <!-- Simple text now; later replace with Leaflet / Google / Mapbox -->
+          <p>Map preview will go here (service location / user location).</p>
+          <p style="font-size: 0.85rem; margin-top: 0.25rem;">
+            You can mount a map library here using the <code>booking-map</code> ID.
+          </p>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <!-- ======= SMALL INTERACTION SCRIPT (just visual) ======= -->
+  <script>
+    // Simple JS to highlight selected calendar day and time slot.
+    // This is only front-end behavior; later you can send these values to MongoDB.
+
+    // --- Calendar selection ---
+    const calendarDays = document.querySelectorAll('.calendar-day:not(.empty)');
+    calendarDays.forEach(day => {
+      day.addEventListener('click', () => {
+        // remove selection from all
+        calendarDays.forEach(d => d.classList.remove('selected'));
+        // mark clicked one
+        day.classList.add('selected');
+      });
+    });
+
+    // --- Time slot selection ---
+    const timeSlots = document.querySelectorAll('.time-slot');
+    timeSlots.forEach(slot => {
+      slot.addEventListener('click', () => {
+        timeSlots.forEach(s => s.classList.remove('selected'));
+        slot.classList.add('selected');
+      });
+    });
+  </script>
+</body>
+</html>
