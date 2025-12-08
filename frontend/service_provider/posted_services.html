@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Posted Services | Prodigy Connect</title>
+  <link rel="stylesheet" href="SP_style.css" />
+</head>
+<body>
+  <!-- ======= SIDEBAR (PROVIDER) ======= -->
+  <nav class="sidebar">
+    <h2 class="logo">Prodigy Connect</h2>
+    <ul class="nav-links">
+      <li><a href="/service_provider/provider_dashboard.html">Home</a></li>
+      <li class="active"><a href="/service_provider/posted_services.html">Posted Services</a></li>
+      <li><a href="/service_provider/requests.html">Requests</a></li>
+      <li><a href="/service_provider/messages.html">Messages</a></li>
+      <li><a href="/service_provider/calendar.html">My Calendar</a></li>
+      <li><a href="/service_provider/payments.html">Payments</a></li>
+      <li><a href="/service_provider/reviews.html">Reviews &amp; Ratings</a></li>
+      <li><a href="/service_provider/profile.html">Profile</a></li>
+      <li><a href="/index.html">Sign Out</a></li>
+    </ul>
+  </nav>
+
+  <!-- ======= MAIN CONTENT ======= -->
+  <div class="content-wrapper">
+    <main class="main-content">
+
+      <!-- Header + CTA -->
+      <header class="header header-with-action">
+        <div>
+          <h1>My Posted Services</h1>
+          <p>Manage your active service listings</p>
+        </div>
+        <button class="post-service-btn" onclick="alert('Later this will open a create-service form 🧱')">
+          + Post New Service
+        </button>
+      </header>
+
+      <!-- Stats row -->
+<section class="stats">
+  <div class="stat-card">
+    <span id="totalServices">3</span><br />
+    <span>Total Services</span>
+  </div>
+
+  <div class="stat-card">
+    <span id="activeServices">3</span><br />
+    <span>Active</span>
+  </div>
+
+  <div class="stat-card">
+    <span id="totalViews">405</span><br />
+    <span>Total Views</span>
+  </div>
+
+  <div class="stat-card">
+    <span id="totalBookings">25</span><br />
+    <span>Total Bookings</span>
+  </div>
+</section>
+
+
+      <!-- ===== Service Cards Grid ===== -->
+      <section class="services-grid">
+
+        <!-- Card 1: Plumbing -->
+        <div class="service-card provider-service-card" data-status="active" data-service-id="plumbing">
+          <div class="service-image">
+            <img
+              src="https://images.pexels.com/photos/5854190/pexels-photo-5854190.jpeg?auto=compress&cs=tinysrgb&w=1200"
+              alt="Professional Plumbing Services"
+            />
+            <span class="service-status-pill">Active</span>
+          </div>
+
+          <div class="service-content">
+            <h3>Professional Plumbing Services</h3>
+            <p class="service-desc">
+              Expert plumbing repairs, installations, and maintenance. 15+ years experience.
+            </p>
+
+            <div class="service-tags">
+              <span>Home Services</span>
+            </div>
+
+            <p class="service-meta">
+              <strong>$75–150/hr</strong> · Sacramento, CA
+            </p>
+
+            <div class="service-tags">
+              <span>Licensed</span>
+              <span>Insured</span>
+              <span>Emergency</span>
+            </div>
+
+            <div class="card-stats-row">
+              <span>👁️ 234 views</span>
+              <span>📅 12 bookings</span>
+            </div>
+
+            <div class="service-footer-provider">
+  <button class="pause-btn">Pause</button>
+  <div class="card-actions">
+    <button class="edit-btn" title="Edit">Edit</button>
+    <button class="delete-btn" title="Delete">Delete</button>
+  </div>
+</div>
+
+          </div>
+        </div>
+
+        <!-- Card 2: Electrical Work -->
+        <div class="service-card provider-service-card" data-status="active" data-service-id="electrical">
+          <div class="service-image">
+            <img
+              src="https://images.pexels.com/photos/4254168/pexels-photo-4254168.jpeg?auto=compress&cs=tinysrgb&w=1200"
+              alt="Residential Electrical Work"
+            />
+            <span class="service-status-pill">Active</span>
+          </div>
+
+          <div class="service-content">
+            <h3>Residential Electrical Work</h3>
+            <p class="service-desc">
+              Safe and certified electrical installations, repairs, and inspections.
+            </p>
+
+            <div class="service-tags">
+              <span>Home Services</span>
+            </div>
+
+            <p class="service-meta">
+              <strong>$80–160/hr</strong> · Sacramento, CA
+            </p>
+
+            <div class="service-tags">
+              <span>Certified</span>
+              <span>Same-day</span>
+              <span>Licensed</span>
+            </div>
+
+            <div class="card-stats-row">
+              <span>👁️ 112 views</span>
+              <span>📅 8 bookings</span>
+            </div>
+
+           <div class="service-footer-provider">
+  <button class="pause-btn">Pause</button>
+  <div class="card-actions">
+    <button class="edit-btn" title="Edit">Edit</button>
+    <button class="delete-btn" title="Delete">Delete</button>
+  </div>
+</div>
+
+          </div>
+        </div>
+
+        <!-- Card 3: Landscaping (NEW IMAGE) -->
+        <div class="service-card provider-service-card" data-status="active" data-service-id="landscaping">
+          <div class="service-image">
+            <img
+              src="https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&w=1200"
+              alt="Garden & Landscape Design"
+            />
+            <span class="service-status-pill">Active</span>
+          </div>
+
+          <div class="service-content">
+            <h3>Garden &amp; Landscape Design</h3>
+            <p class="service-desc">
+              Transform your outdoor space with professional landscaping services.
+            </p>
+
+            <div class="service-tags">
+              <span>Home Services</span>
+            </div>
+
+            <p class="service-meta">
+              <strong>$500–2000</strong> · Elk Grove, CA
+            </p>
+
+            <div class="service-tags">
+              <span>Free Consultation</span>
+              <span>Eco-Friendly</span>
+            </div>
+
+            <div class="card-stats-row">
+              <span>👁️ 59 views</span>
+              <span>📅 5 bookings</span>
+            </div>
+
+            <div class="service-footer-provider">
+  <button class="pause-btn">Pause</button>
+  <div class="card-actions">
+    <button class="edit-btn" title="Edit">Edit</button>
+    <button class="delete-btn" title="Delete">Delete</button>
+  </div>
+</div>
+
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h2>Prodigy Connect</h2>
+          <p>Connecting communities through trusted local services.</p>
+        </div>
+        <div class="footer-links">
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="#">Browse</a></li>
+            <li><a href="#">Providers</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h3>Follow Us</h3>
+          <div class="social-icons">
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" /></a>
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter" /></a>
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" /></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Prodigy Connect — CSC 131-04 Software Engineering Project</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===== DETAILS MODAL ===== -->
+  <div id="serviceModal" class="service-modal">
+    <div class="service-modal-content">
+      <button class="service-modal-close" aria-label="Close">&times;</button>
+      <img src="" alt="" class="service-modal-header-img" id="modalImage" />
+      <div class="service-modal-body">
+        <div class="service-modal-toprow">
+          <div class="service-modal-left">
+            <span class="badge">Home Services</span>
+            <h2 id="modalTitle">Service Title</h2>
+            <p class="service-location" id="modalLocation">Location</p>
+            <p style="margin-top:0.4rem;font-size:0.9rem;color:#555;">
+              <strong id="modalProvider">Provider Name</strong> · ⭐ <span id="modalRating">4.9</span> · <span id="modalReviews">127 reviews</span>
+            </p>
+          </div>
+          <div class="service-modal-price">
+            <span class="rate" id="modalPrice">$0–0/hr</span><br />
+            <span style="font-size:0.8rem;color:#777;">/hr</span>
+          </div>
+        </div>
+
+        <div class="service-modal-tabs">
+          <div class="service-modal-tab active">Service Details</div>
+          <div class="service-modal-tab">Reviews (Demo)</div>
+        </div>
+
+        <div>
+          <p class="service-modal-section-title">About This Service</p>
+          <p class="service-modal-description" id="modalDescription">
+            Description goes here…
+          </p>
+
+          <p class="service-modal-section-title" style="margin-top:0.75rem;">Highlights</p>
+          <div class="service-modal-tags" id="modalTags"></div>
+        </div>
+
+        <div class="service-modal-actions">
+          <button id="editDescBtn" class="btn-outline">Edit Description</button>
+          <button id="saveDescBtn" class="btn-outline" style="display:none;">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script>
+    // ----- PAUSE / RESUME + EDIT + DELETE + MODAL HOOKUP -----
+    document.querySelectorAll('.provider-service-card').forEach(card => {
+      const pauseBtn   = card.querySelector('.pause-btn');
+      const statusPill = card.querySelector('.service-status-pill');
+      const imageWrap  = card.querySelector('.service-image');
+      const editBtn    = card.querySelector('.edit-btn');
+      const deleteBtn  = card.querySelector('.delete-btn');
+
+      // Pause / Resume
+      pauseBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+
+  const isActive = !card.classList.contains('paused');
+
+  if (isActive) {
+    card.classList.add('paused');
+    statusPill.classList.add('paused');
+    statusPill.textContent = 'Paused';
+    pauseBtn.textContent = 'Resume';
+  } else {
+    card.classList.remove('paused');
+    statusPill.classList.remove('paused');
+    statusPill.textContent = 'Active';
+    pauseBtn.textContent = 'Pause';
+  }
+
+  updateStats();
+});
+
+
+      // OPEN MODAL ON EDIT BUTTON
+      editBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = card.dataset.serviceId;
+        openModal(id);
+      });
+
+      // DELETE CARD
+      deleteBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (confirm("Are you sure you want to delete this service?")) {
+    card.remove();
+    updateStats();
+  }
+});
+
+
+      // still allow clicking the body of the card to open details
+      card.addEventListener('click', (e) => {
+        // if click came from footer buttons, ignore (we already handled)
+        if (e.target.closest('.pause-btn') || e.target.closest('.card-actions')) return;
+        const id = card.dataset.serviceId;
+        openModal(id);
+      });
+    });
+
+    // ----- EXISTING MODAL DATA / FUNCTIONS (UNCHANGED) -----
+    const serviceData = {
+      plumbing: {
+        title: 'Professional Plumbing Services',
+        price: '$75–150/hr',
+        location: 'Sacramento, CA',
+        provider: 'Mike Anderson',
+        rating: '4.9',
+        reviews: '127 reviews',
+        img: 'https://images.pexels.com/photos/5854190/pexels-photo-5854190.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        description:
+          'Expert plumbing repairs, installations, and maintenance. 15+ years experience. I provide professional home services to clients throughout the Sacramento area. Customer satisfaction is my top priority.',
+        tags: ['Licensed', 'Insured', 'Emergency']
+      },
+      electrical: {
+        title: 'Residential Electrical Work',
+        price: '$80–160/hr',
+        location: 'Sacramento, CA',
+        provider: 'Alex Rivera',
+        rating: '4.8',
+        reviews: '98 reviews',
+        img: 'https://images.pexels.com/photos/4254168/pexels-photo-4254168.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        description:
+          'Certified electrician offering safe and reliable residential electrical work: panel upgrades, lighting, and troubleshooting. Same-day appointments available.',
+        tags: ['Certified', 'Same-day', 'Licensed']
+      },
+      landscaping: {
+        title: 'Garden & Landscape Design',
+        price: '$500–2000',
+        location: 'Elk Grove, CA',
+        provider: 'David Green',
+        rating: '4.8',
+        reviews: '156 reviews',
+        img: 'https://images.pexels.com/photos/90946/pexels-photo-90946.jpeg?auto=compress&cs=tinysrgb&w=1200',
+        description:
+          'Custom garden and landscape design, from concept to installation. I focus on sustainable, low-maintenance outdoor spaces that look great year-round.',
+        tags: ['Free Consultation', 'Eco-Friendly']
+      }
+    };
+
+    const modal       = document.getElementById('serviceModal');
+    const modalImg    = document.getElementById('modalImage');
+    const modalTitle  = document.getElementById('modalTitle');
+    const modalLocation = document.getElementById('modalLocation');
+    const modalProvider = document.getElementById('modalProvider');
+    const modalRating   = document.getElementById('modalRating');
+    const modalReviews  = document.getElementById('modalReviews');
+    const modalPrice    = document.getElementById('modalPrice');
+    const modalDesc     = document.getElementById('modalDescription');
+    const modalTags     = document.getElementById('modalTags');
+    const editDescBtn   = document.getElementById('editDescBtn');
+    const saveDescBtn   = document.getElementById('saveDescBtn');
+
+    let currentServiceId = null;
+
+    function openModal(serviceId) {
+      const data = serviceData[serviceId];
+      if (!data) return;
+
+      currentServiceId = serviceId;
+
+      modalImg.src        = data.img;
+      modalTitle.textContent    = data.title;
+      modalLocation.textContent = data.location;
+      modalProvider.textContent = data.provider;
+      modalRating.textContent   = data.rating;
+      modalReviews.textContent  = data.reviews;
+      modalPrice.textContent    = data.price;
+      modalDesc.textContent     = data.description;
+
+      modalTags.innerHTML = '';
+      data.tags.forEach(tag => {
+        const span = document.createElement('span');
+        span.textContent = tag;
+        modalTags.appendChild(span);
+      });
+
+      modal.classList.add('open');
+      modalDesc.contentEditable = 'false';
+      saveDescBtn.style.display = 'none';
+      editDescBtn.style.display = 'inline-block';
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      currentServiceId = null;
+    }
+
+    document.querySelector('.service-modal-close').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    editDescBtn.addEventListener('click', () => {
+      modalDesc.contentEditable = 'true';
+      modalDesc.focus();
+      editDescBtn.style.display = 'none';
+      saveDescBtn.style.display = 'inline-block';
+    });
+
+    saveDescBtn.addEventListener('click', () => {
+      modalDesc.contentEditable = 'false';
+      editDescBtn.style.display = 'inline-block';
+      saveDescBtn.style.display = 'none';
+
+      if (currentServiceId && serviceData[currentServiceId]) {
+        serviceData[currentServiceId].description = modalDesc.textContent.trim();
+
+        const card = document.querySelector(`.provider-service-card[data-service-id="${currentServiceId}"]`);
+        if (card) {
+          const shortDesc = card.querySelector('.service-desc');
+          if (shortDesc) {
+            shortDesc.textContent = modalDesc.textContent.trim();
+          }
+        }
+      }
+    });
+  </script>
+
+<script>
+function updateStats() {
+  const cards = document.querySelectorAll(".provider-service-card");
+  const total = cards.length;
+
+  let active = 0;
+  cards.forEach(card => {
+    if (!card.classList.contains("paused")) active++;
+  });
+
+  document.getElementById("totalServices").textContent = total;
+  document.getElementById("activeServices").textContent = active;
+}
+</script>
+
+
+
+</body>
+</html>

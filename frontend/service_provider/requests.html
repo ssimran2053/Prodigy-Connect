@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Service Requests | Prodigy Connect</title>
+  <link rel="stylesheet" href="SP_style.css" />
+
+  <!-- Page-specific styling to match your other layouts -->
+  <style>
+    .requests-header-sub {
+      margin-top: 0.15rem;
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .tab-row {
+      display: flex;
+      gap: 0.5rem;
+      margin: 1.5rem 0 1rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      border-radius: 999px;
+      border: 1px solid #ddd;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.85rem;
+      background: #fff;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(90deg, #ff7ac4, #8169ff);
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .requests-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      min-height: 260px; /* keeps the page from looking empty */
+    }
+
+    .request-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+      border: 1px solid #e5e7eb;
+    }
+
+    .request-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.35rem;
+    }
+
+    .request-header h3 {
+      margin: 0;
+      font-size: 1.02rem;
+    }
+
+    .request-time {
+      display: block;
+      font-size: 0.8rem;
+      color: #888;
+    }
+
+    .priority-badge {
+      border-radius: 999px;
+      padding: 0.2rem 0.55rem;
+      font-size: 0.75rem;
+      text-transform: lowercase;
+      color: #444;
+      background: #f3f4f6;
+    }
+    .priority-badge.high {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .priority-badge.medium {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .priority-badge.normal {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+    .priority-badge.completed {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .priority-badge.declined {
+      background: #e5e7eb;
+      color: #4b5563;
+    }
+
+    .request-title {
+      margin: 0.3rem 0 0.25rem;
+      font-size: 0.98rem;
+      font-weight: 600;
+    }
+
+    .request-desc {
+      margin: 0 0 0.5rem;
+      font-size: 0.9rem;
+      color: #4b5563;
+    }
+
+    .request-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 1.2rem;
+      font-size: 0.82rem;
+      color: #6b7280;
+      margin-bottom: 0.7rem;
+    }
+
+    .request-meta .tag {
+      border-radius: 999px;
+      padding: 0.1rem 0.6rem;
+      font-size: 0.75rem;
+      background: #eef2ff;
+      color: #4338ca;
+    }
+
+    .request-actions {
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    .request-btn {
+      font-size: 0.85rem;
+      padding-inline: 1.4rem;
+    }
+
+    .request-card.accepted-border {
+      border-color: #a5b4fc;
+    }
+
+    .request-card.completed-border {
+      border-color: #6ee7b7;
+    }
+
+    .request-card.declined {
+      opacity: 0.65;
+    }
+
+    .request-card.declined .request-actions .btn-primary,
+    .request-card.declined .request-actions .btn-secondary {
+      cursor: default;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .request-status-label {
+      font-size: 0.8rem;
+      color: #4b5563;
+      margin-left: auto;
+    }
+
+    .empty-state {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem 1rem;
+      border-radius: 12px;
+      border: 1px dashed #d1d5db;
+      color: #6b7280;
+      font-size: 0.9rem;
+      background: #f9fafb;
+    }
+  </style>
+</head>
+<body>
+  <!-- ======= SIDEBAR (SERVICE PROVIDER) ======= -->
+  <nav class="sidebar">
+    <h2 class="logo">Prodigy Connect</h2>
+    <ul class="nav-links">
+      <li><a href="/service_provider/provider_dashboard.html">Home</a></li>
+      <li><a href="/service_provider/posted_services.html">Posted Services</a></li>
+      <li class="active"><a href="/service_provider/requests.html">Requests</a></li>
+      <li><a href="/service_provider/messages.html">Messages</a></li>
+      <li><a href="/service_provider/calendar.html">My Calendar</a></li>
+      <li><a href="/service_provider/payments.html">Payments</a></li>
+      <li><a href="/service_provider/reviews.html">Reviews & Ratings</a></li>
+      <li><a href="/service_provider/profile.html">Profile</a></li>
+      <li><a href="/index.html">Sign Out</a></li>
+    </ul>
+  </nav>
+
+  <!-- ======= MAIN CONTENT ======= -->
+  <div class="content-wrapper">
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div>
+          <h1>Service Requests</h1>
+          <p class="requests-header-sub">Manage your active service listings and client requests</p>
+        </div>
+        <div class="user-info">
+          <span class="user-name">Demo Provider</span>
+          <span class="user-location">Sacramento, CA</span>
+        </div>
+      </header>
+
+      <!-- Tabs -->
+      <section class="tab-row">
+        <button class="tab-btn active" data-tab="pending">Pending (2)</button>
+        <button class="tab-btn" data-tab="accepted">Accepted (1)</button>
+        <button class="tab-btn" data-tab="completed">Completed (1)</button>
+        <button class="tab-btn" data-tab="all">All Requests (4)</button>
+      </section>
+
+      <!-- Requests list -->
+      <section class="requests-list" id="requestsList">
+
+        <!-- Request 1 – Pending -->
+        <article class="request-card" data-status="pending">
+          <div class="request-header">
+            <div>
+              <h3>Sarah Johnson</h3>
+              <span class="request-time">52 min ago</span>
+            </div>
+            <span class="priority-badge high">high priority</span>
+          </div>
+
+          <h4 class="request-title">Kitchen Sink Repair</h4>
+          <p class="request-desc">
+            My kitchen sink is leaking and needs urgent repair. The leak is coming from under the sink
+            and it's getting worse.
+          </p>
+
+          <div class="request-meta">
+            <span>💰 $100–150</span>
+            <span>📍 Sacramento, CA · 2.3 miles away</span>
+            <span class="tag">Plumbing</span>
+            <span>⏱ ASAP – Emergency</span>
+          </div>
+
+          <div class="request-actions">
+            <button class="btn-primary request-btn accept-btn">Accept</button>
+            <button class="btn-secondary request-btn decline-btn">Decline</button>
+          </div>
+        </article>
+
+        <!-- Request 2 – Pending -->
+        <article class="request-card" data-status="pending">
+          <div class="request-header">
+            <div>
+              <h3>Michael Chen</h3>
+              <span class="request-time">1 hour ago</span>
+            </div>
+            <span class="priority-badge medium">medium priority</span>
+          </div>
+
+          <h4 class="request-title">Bathroom Installation</h4>
+          <p class="request-desc">
+            Full bathroom renovation including fixtures, toilet, shower installation and tile work.
+          </p>
+
+          <div class="request-meta">
+            <span>💰 $2000–3000</span>
+            <span>📍 Sacramento, CA · 5.1 miles away</span>
+            <span class="tag">Plumbing</span>
+            <span>📅 Within 2 weeks</span>
+          </div>
+
+          <div class="request-actions">
+            <button class="btn-primary request-btn accept-btn">Accept</button>
+            <button class="btn-secondary request-btn decline-btn">Decline</button>
+          </div>
+        </article>
+
+        <!-- Request 3 – Accepted -->
+        <article class="request-card accepted-border" data-status="accepted">
+          <div class="request-header">
+            <div>
+              <h3>Emily Carter</h3>
+              <span class="request-time">3 hours ago</span>
+            </div>
+            <span class="priority-badge normal">normal priority</span>
+          </div>
+
+          <h4 class="request-title">Garbage Disposal Repair</h4>
+          <p class="request-desc">
+            Garbage disposal is jammed and making loud noise when turned on.
+          </p>
+
+          <div class="request-meta">
+            <span>💰 $80–150</span>
+            <span>📍 Midtown Sacramento · 3.0 miles away</span>
+            <span class="tag">Plumbing</span>
+            <span>📅 Tomorrow afternoon</span>
+          </div>
+
+          <div class="request-actions">
+            <button class="btn-primary request-btn accept-btn">Accept</button>
+            <button class="btn-secondary request-btn decline-btn">Decline</button>
+          </div>
+        </article>
+
+        <!-- Request 4 – Completed -->
+        <article class="request-card completed-border" data-status="completed">
+          <div class="request-header">
+            <div>
+              <h3>John Smith</h3>
+              <span class="request-time">2 days ago</span>
+            </div>
+            <span class="priority-badge completed">completed</span>
+          </div>
+
+          <h4 class="request-title">Water Heater Checkup</h4>
+          <p class="request-desc">
+            Annual maintenance and safety inspection for water heater system.
+          </p>
+
+          <div class="request-meta">
+            <span>💰 $120–180</span>
+            <span>📍 Elk Grove, CA</span>
+            <span class="tag">Plumbing</span>
+            <span>✅ Completed</span>
+          </div>
+
+          <div class="request-actions">
+            <button class="btn-secondary request-btn" disabled>Completed</button>
+          </div>
+        </article>
+
+        <!-- Empty-state message -->
+        <div class="empty-state" id="emptyState">
+          No requests in this view yet. When new clients contact you, their requests will show up here.
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer (same style as other pages) -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h2>Prodigy Connect</h2>
+          <p>Connecting communities through trusted local services.</p>
+        </div>
+        <div class="footer-links">
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="#">Browse</a></li>
+            <li><a href="#">Providers</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h3>Follow Us</h3>
+          <div class="social-icons">
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" /></a>
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter" /></a>
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" /></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Prodigy Connect — CSC 131-04 Software Engineering Project</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===== JS: Tab filtering + Accept / Decline ===== -->
+  <script>
+    const tabButtons = document.querySelectorAll(".tab-btn");
+    const cards = Array.from(document.querySelectorAll(".request-card"));
+    const emptyState = document.getElementById("emptyState");
+
+    let currentTab = "pending";
+
+    function getCounts() {
+      const counts = { pending: 0, accepted: 0, completed: 0, all: cards.length };
+      cards.forEach(card => {
+        const status = card.dataset.status;
+        if (status === "pending") counts.pending++;
+        if (status === "accepted") counts.accepted++;
+        if (status === "completed") counts.completed++;
+      });
+      return counts;
+    }
+
+    function updateTabLabels() {
+      const c = getCounts();
+      tabButtons.forEach(btn => {
+        const tab = btn.dataset.tab;
+        if (tab === "pending") btn.textContent = `Pending (${c.pending})`;
+        if (tab === "accepted") btn.textContent = `Accepted (${c.accepted})`;
+        if (tab === "completed") btn.textContent = `Completed (${c.completed})`;
+        if (tab === "all") btn.textContent = `All Requests (${c.all})`;
+      });
+    }
+
+    function applyFilter() {
+      let visible = 0;
+      cards.forEach(card => {
+        const status = card.dataset.status;
+        const shouldShow =
+          currentTab === "all" ? true : status === currentTab;
+
+        card.style.display = shouldShow ? "block" : "none";
+        if (shouldShow) visible++;
+      });
+
+      emptyState.style.display = visible === 0 ? "flex" : "none";
+    }
+
+    // Tab click behavior
+    tabButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tabButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentTab = btn.dataset.tab;
+        applyFilter();
+      });
+    });
+
+    // Accept / Decline
+    cards.forEach(card => {
+      const acceptBtn = card.querySelector(".accept-btn");
+      const declineBtn = card.querySelector(".decline-btn");
+      const badge = card.querySelector(".priority-badge");
+
+      if (acceptBtn) {
+        acceptBtn.addEventListener("click", () => {
+          card.dataset.status = "accepted";
+          card.classList.add("accepted-border");
+          card.classList.remove("declined");
+          if (badge) {
+            badge.textContent = "accepted";
+            badge.className = "priority-badge normal";
+          }
+          updateTabLabels();
+          applyFilter();
+        });
+      }
+
+      if (declineBtn) {
+        declineBtn.addEventListener("click", () => {
+          // mark declined but keep in "All Requests"
+          card.dataset.status = "declined";
+          card.classList.add("declined");
+          if (badge) {
+            badge.textContent = "declined";
+            badge.className = "priority-badge declined";
+          }
+          updateTabLabels();
+          applyFilter();
+        });
+      }
+    });
+
+    // Initial render
+    updateTabLabels();
+    applyFilter();
+  </script>
+</body>
+</html>
