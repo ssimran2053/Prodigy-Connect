@@ -9,24 +9,29 @@
 <body>
   <div class="auth-wrapper">
 
-    <!-- Top navigation -->
+    <!-- ===== TOP NAV ===== -->
     <div class="auth-nav">
-      <button class="back-btn" onclick="window.location.href='/'">← Back</button>
-      <button class="admin-btn" onclick="window.location.href='admin_login.html'">Admin Login</button>
+      <!-- back to homepage -->
+      <button class="back-btn" onclick="window.location.href='/index.html'">← Back</button>
+
+      <!-- go to admin login -->
+      <button class="admin-btn" onclick="window.location.href='/admin/login.html'">Admin Login</button>
     </div>
 
-    <!-- Login form -->
+    <!-- ===== LOGIN CARD ===== -->
     <div class="auth-card">
       <img src="/images/logo.png" alt="Prodigy Connect" class="logo" />
 
       <h2>Welcome to Prodigy Connect</h2>
       <p class="subtitle">Sign in or create your account</p>
 
+      <!-- Tabs -->
       <div class="tabs">
         <button class="tab active" onclick="window.location.href='login.html'">Login</button>
         <button class="tab" onclick="window.location.href='signup.html'">Sign Up</button>
       </div>
 
+      <!-- Login Form -->
       <form>
         <label>Email</label>
         <input type="email" placeholder="your@email.com" required />
@@ -39,13 +44,34 @@
         <a href="#" class="forgot">Forgot Password</a>
       </form>
 
+      <!-- Divider -->
       <div class="divider">Quick Demo Access</div>
+
+      <!-- Demo Buttons -->
       <div class="demo-buttons">
-        <button class="demo-btn" onclick="window.location.href='/service_seeker/service_seeker.html'">Demo as Service Seeker</button>
-        <button class="demo-btn">Demo as Service Provider</button>
-        <button class="demo-btn">Demo as Admin</button>
+
+        <!-- DEMO SEEKER -->
+        <button class="demo-btn"
+          onclick="window.location.href='/service_seeker/service_seeker.html'">
+          Demo as Service Seeker
+        </button>
+
+        <!-- DEMO PROVIDER -->
+        <button class="demo-btn"
+          onclick="window.location.href='/service_provider/provider_dashboard.html'">
+          Demo as Service Provider
+        </button>
+
+        <!-- DEMO ADMIN -->
+        <button class="demo-btn"
+          onclick="window.location.href='/admin/admin_dashboard.html'">
+          Demo as Admin
+        </button>
+
       </div>
+
     </div>
   </div>
+
 </body>
 </html>

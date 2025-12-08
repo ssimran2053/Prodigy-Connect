@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messages | Prodigy Connect</title>
+  <link rel="stylesheet" href="SS_style.css" />
+</head>
+<body>
+  <!-- ======= SIDEBAR ======= -->
+  <nav class="sidebar">
+    <h2 class="logo">Prodigy Connect</h2>
+    <ul class="nav-links">
+      <li><a href="/service_seeker/service_seeker.html">Home</a></li>
+      <li><a href="/service_seeker/browse_services.html">Browse Services</a></li>
+      <li><a href="/service_seeker/favorites.html">Favorites</a></li>
+      <li><a href="/service_seeker/book_services.html">Book Services</a></li>
+      <li class="active"><a href="/service_seeker/messages.html">Messages</a></li>
+      <li><a href="/service_seeker/my_bookings.html">My Bookings</a></li>
+      <li><a href="/service_seeker/map.html">Map</a></li>
+      <li><a href="/service_seeker/advanced_search.html">Advanced Search</a></li>
+      <li><a href="/service_seeker/profile.html">Profile</a></li>
+      <!-- Sign out like the other pages -->
+      <li><a href="/index.html">Sign Out</a></li>
+    </ul>
+  </nav>
+
+  <!-- ======= MAIN CONTENT ======= -->
+  <div class="content-wrapper">
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div>
+          <h1>Messages</h1>
+          <p>Communicate with service providers and seekers</p>
+        </div>
+        <div class="user-info">
+          <span class="user-name">Demo User</span>
+          <span class="user-location">Sacramento, CA</span>
+        </div>
+      </header>
+
+      <!-- ===== MESSAGES LAYOUT ===== -->
+      <section class="messages-layout">
+        <!-- LEFT: Conversation list -->
+        <aside class="conversation-sidebar">
+          <!-- Banner where the search bar used to be -->
+          <div class="messages-banner">
+            <h2>My Messages</h2>
+            <p>Please be cautious when sharing personal information.</p>
+          </div>
+
+          <ul class="conversation-list" id="conversationList">
+            <li class="conversation-item active" data-id="mike">
+              <img class="conversation-avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="Mike" />
+              <div class="conversation-meta">
+                <div class="conversation-name">Mike Anderson</div>
+                <div class="conversation-snippet">Yes, I can help with that…</div>
+              </div>
+              <div class="conversation-time">2d</div>
+            </li>
+
+            <li class="conversation-item" data-id="emily">
+              <img class="conversation-avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="Emily" />
+              <div class="conversation-meta">
+                <div class="conversation-name">Emily Carter</div>
+                <div class="conversation-snippet">Great! See you then.</div>
+              </div>
+              <div class="conversation-time">15h</div>
+            </li>
+
+            <li class="conversation-item" data-id="john">
+              <img class="conversation-avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="John" />
+              <div class="conversation-meta">
+                <div class="conversation-name">John Smith</div>
+                <div class="conversation-snippet">I can provide a free quote…</div>
+              </div>
+              <div class="conversation-time">1h</div>
+            </li>
+          </ul>
+        </aside>
+
+        <!-- RIGHT: Chat panel -->
+        <section class="chat-panel">
+          <!-- Chat header -->
+          <div class="chat-header">
+            <div class="chat-header-left">
+              <img id="chatHeaderAvatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="Avatar" />
+              <div>
+                <div class="chat-header-name" id="chatHeaderName">Mike Anderson</div>
+                <div class="chat-header-role" id="chatHeaderRole">Provider · Plumbing Services</div>
+              </div>
+            </div>
+            <span class="chat-header-menu">⋯</span>
+          </div>
+
+          <!-- Chat messages -->
+          <div class="chat-messages" id="chatMessages">
+            <!-- messages inserted by JS -->
+          </div>
+
+          <!-- Chat input -->
+          <form class="chat-input-row" id="chatForm">
+            <input
+              id="chatInput"
+              type="text"
+              placeholder="Type a message..."
+              autocomplete="off"
+            />
+            <button class="chat-send-btn" type="submit">Send ➤</button>
+          </form>
+        </section>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h2>Prodigy Connect</h2>
+          <p>Connecting communities through trusted local services.</p>
+        </div>
+        <div class="footer-links">
+          <h3>Explore</h3>
+          <ul>
+            <li><a href="#">Browse</a></li>
+            <li><a href="#">Providers</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h3>Follow Us</h3>
+          <div class="social-icons">
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook" /></a>
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter" /></a>
+            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" /></a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 Prodigy Connect — CSC 131-04 Software Engineering Project</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ===== SIMPLE MESSAGES LOGIC ===== -->
+  <script>
+    // Fake conversation data
+    const conversations = {
+      mike: {
+        name: "Mike Anderson",
+        role: "Provider · Plumbing Services",
+        avatar: "https://cdn-icons-png.flaticon.com/512/921/921071.png",
+        messages: [
+          { from: "me", text: "Hi! I need help with a plumbing issue.", time: "2d ago" },
+          { from: "them", text: "Hello! I’d be happy to help. What seems to be the problem?", time: "2d ago" },
+          { from: "me", text: "There’s a leak under my kitchen sink. It started this morning.", time: "2d ago" },
+          { from: "them", text: "Yes, I can help with that. When would you like to schedule?", time: "2d ago" }
+        ]
+      },
+      emily: {
+        name: "Emily Carter",
+        role: "Provider · Tutoring Services",
+        avatar: "https://cdn-icons-png.flaticon.com/512/921/921071.png",
+        messages: [
+          { from: "me", text: "Thanks again for helping with my exam prep!", time: "15h ago" },
+          { from: "them", text: "No problem at all! Happy to help 😊", time: "15h ago" },
+          { from: "them", text: "Let me know if you want to schedule another session.", time: "15h ago" }
+        ]
+      },
+      john: {
+        name: "John Smith",
+        role: "Provider · Home Services",
+        avatar: "https://cdn-icons-png.flaticon.com/512/921/921071.png",
+        messages: [
+          { from: "them", text: "I can provide a free quote this weekend.", time: "1h ago" },
+          { from: "me", text: "Awesome, Saturday morning works for me.", time: "1h ago" }
+        ]
+      }
+    };
+
+    const conversationList = document.getElementById("conversationList");
+    const chatMessages = document.getElementById("chatMessages");
+    const chatHeaderName = document.getElementById("chatHeaderName");
+    const chatHeaderRole = document.getElementById("chatHeaderRole");
+    const chatHeaderAvatar = document.getElementById("chatHeaderAvatar");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+
+    let currentConversationId = "mike";
+
+    // Render messages for the selected conversation
+    function renderConversation(id) {
+      const convo = conversations[id];
+      if (!convo) return;
+
+      currentConversationId = id;
+      chatHeaderName.textContent = convo.name;
+      chatHeaderRole.textContent = convo.role;
+      chatHeaderAvatar.src = convo.avatar;
+
+      chatMessages.innerHTML = "";
+
+      convo.messages.forEach((msg) => {
+        const bubble = document.createElement("div");
+        bubble.classList.add("chat-bubble");
+        bubble.classList.add(msg.from === "me" ? "me" : "them");
+        bubble.innerHTML = `
+          <p>${msg.text}</p>
+          <span class="chat-time">${msg.time}</span>
+        `;
+        chatMessages.appendChild(bubble);
+      });
+
+      // Scroll to bottom
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Click handler for conversation list
+    conversationList.querySelectorAll(".conversation-item").forEach((item) => {
+      item.addEventListener("click", () => {
+        // Update active styling
+        conversationList
+          .querySelectorAll(".conversation-item")
+          .forEach((i) => i.classList.remove("active"));
+        item.classList.add("active");
+
+        const id = item.getAttribute("data-id");
+        renderConversation(id);
+      });
+    });
+
+    // Sending a message
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      const convo = conversations[currentConversationId];
+      const newMsg = { from: "me", text, time: "Just now" };
+      convo.messages.push(newMsg);
+
+      chatInput.value = "";
+
+      const bubble = document.createElement("div");
+      bubble.classList.add("chat-bubble", "me");
+      bubble.innerHTML = `
+        <p>${newMsg.text}</p>
+        <span class="chat-time">${newMsg.time}</span>
+      `;
+      chatMessages.appendChild(bubble);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    });
+
+    // Initial load
+    renderConversation(currentConversationId);
+  </script>
+</body>
+</html>
