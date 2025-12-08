@@ -9,45 +9,84 @@
 <body>
   <!-- ===== HEADER / NAVBAR ===== -->
   <header class="navbar">
-    <div class="logo">
-      <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" alt="Logo" />
-      <h2>Prodigy Connect</h2>
+    <div class="navbar-inner">
+      <div class="logo">
+        <img src="https://cdn-icons-png.flaticon.com/512/565/565547.png" alt="Logo" />
+        <h2>Prodigy Connect</h2>
+      </div>
+
+      <nav class="nav-links">
+        <!-- Go to auth login screen -->
+        <a href="/login.html" class="nav-link">Login</a>
+
+        <!-- Go to sign-up screen -->
+        <button class="btn-signup" onclick="window.location.href='/signup.html'">
+          Sign Up
+        </button>
+      </nav>
     </div>
-<nav>
-  <a href="/service_seeker/service_seeker.html">Login</a>
-  <button class="btn-signup" onclick="window.location.href='/login.html'">
-    Sign Up
-  </button>
-</nav>
-
-
   </header>
 
   <!-- ===== HERO SECTION ===== -->
   <section class="hero">
-    <div class="hero-text">
-      <h1>Connect with Local<br><span>Service Providers</span></h1>
-      <p>
-        Prodigy Connect brings together service seekers and providers in your community.
-        Find trusted professionals for any task, or offer your skills to those who need them.
-      </p>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="hero-tag">Connect. Book. Get it done.</p>
+        <h1>Connect with Local<br><span>Service Providers</span></h1>
+        <p class="hero-subtitle">
+          Prodigy Connect brings together service seekers and providers in your community.
+          Find trusted professionals for any task, or offer your skills to those who need them.
+        </p>
 
-      <div class="hero-buttons">
-        <button class="btn-primary">🔍 Find Services</button>
-        <button class="btn-secondary">⚡ Offer Services</button>
+        <div class="hero-buttons">
+          <!-- Takes user to the service seeker Browse page -->
+          <button class="btn-primary"
+                  onclick="window.location.href='/service_seeker/browse_services.html'">
+            🔍 Find Services
+          </button>
+
+          <!-- For now, offering services = sign up (later can point to provider dashboard) -->
+          <button class="btn-secondary"
+                  onclick="window.location.href='/signup.html'">
+            ⚡ Offer Services
+          </button>
+        </div>
+
+        <div class="stats">
+          <div class="stat-pill">
+            <strong>10k+</strong>
+            <span>Active Users</span>
+          </div>
+          <div class="stat-pill">
+            <strong>5k+</strong>
+            <span>Services Listed</span>
+          </div>
+          <div class="stat-pill">
+            <strong>4.8★</strong>
+            <span>Average Rating</span>
+          </div>
+        </div>
       </div>
 
-      <div class="stats">
-        <div><strong>10k+</strong><br>Active Users</div>
-        <div><strong>5k+</strong><br>Services Listed</div>
-        <div><strong>4.8★</strong><br>Average Rating</div>
-      </div>
-    </div>
+      <div class="hero-img">
+        <div class="hero-card">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Stick_Figures.png/640px-Stick_Figures.png" alt="Community">
+          <div class="verified">
+            <span class="verified-badge">✅ Verified Safe</span>
+            <span class="verified-text">100% background checked providers</span>
+          </div>
 
-    <div class="hero-img">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Stick_Figures.png/640px-Stick_Figures.png" alt="Community">
-      <div class="verified">
-        ✅ Verified Safe<br><span>100% Background Checked</span>
+          <div class="hero-mini-cards">
+            <div class="mini-card">
+              <span class="mini-label">Service Seeker</span>
+              <span class="mini-value">Looking for help?</span>
+            </div>
+            <div class="mini-card">
+              <span class="mini-label">Service Provider</span>
+              <span class="mini-value">Share your skills</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -78,88 +117,90 @@
         <p>Book and manage your appointments seamlessly.</p>
       </div>
       <div class="feature-card">
-        <h3>⭐ Ratings & Reviews</h3>
+        <h3>⭐ Ratings &amp; Reviews</h3>
         <p>Make informed decisions with community feedback.</p>
       </div>
       <div class="feature-card">
-        <h3>🛡️ Safe & Secure</h3>
+        <h3>🛡️ Safe &amp; Secure</h3>
         <p>Admin-monitored platform ensuring trust and safety.</p>
       </div>
     </div>
   </section>
 
+  <!-- ===== HOW IT WORKS SECTION ===== -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="how-container">
+      <p class="tagline">👣 Simple Steps</p>
+      <h2>How It Works</h2>
+      <p class="subtitle">Get started in three simple steps</p>
 
-
-<!-- ===== HOW IT WORKS SECTION ===== -->
-<section class="how-it-works">
-  <div class="how-container">
-    <h2>How It Works</h2>
-    <p class="subtitle">Get started in three simple steps</p>
-
-    <div class="steps">
-      <div class="step">
-        <div class="circle">1</div>
-        <h3>Create Account</h3>
-        <p>Sign up for free as a seeker or provider</p>
-      </div>
-
-      <div class="arrow">→</div>
-
-      <div class="step">
-        <div class="circle">2</div>
-        <h3>Browse & Connect</h3>
-        <p>Find services or post your offerings</p>
-      </div>
-
-      <div class="arrow">→</div>
-
-      <div class="step">
-        <div class="circle">3</div>
-        <h3>Book & Complete</h3>
-        <p>Schedule appointments and get things done</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===== GET STARTED SECTION ===== -->
-<section class="get-started">
-  <div class="get-container">
-    <p class="tag"># Join our growing community</p>
-    <h2>Ready to Get Started?</h2>
-    <p class="subtitle">
-      Join thousands of service seekers and providers making meaningful connections every day.
-    </p>
-
-    <div class="cta-buttons">
-      <button class="btn-primary">Create Free Account</button>
-      <button class="btn-secondary">How It Works</button>
-    </div>
-
-    <div class="badges">
-      <div class="badge">
-        <span class="icon">💸</span>
-        <div>
-          <strong>100% Free</strong><br><small>No hidden fees</small>
+      <div class="steps">
+        <div class="step">
+          <div class="circle">1</div>
+          <h3>Create Account</h3>
+          <p>Sign up for free as a seeker or provider.</p>
         </div>
-      </div>
-      <div class="badge">
-        <span class="icon">🛡️</span>
-        <div>
-          <strong>Verified Safe</strong><br><small>Background checked</small>
+
+        <div class="arrow">→</div>
+
+        <div class="step">
+          <div class="circle">2</div>
+          <h3>Browse &amp; Connect</h3>
+          <p>Search services, compare options, and send messages.</p>
         </div>
-      </div>
-      <div class="badge">
-        <span class="icon">⭐</span>
-        <div>
-          <strong>Top Rated</strong><br><small>4.8/5 average</small>
+
+        <div class="arrow">→</div>
+
+        <div class="step">
+          <div class="circle">3</div>
+          <h3>Book &amp; Complete</h3>
+          <p>Schedule appointments and get things done.</p>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-  
+  <!-- ===== GET STARTED SECTION ===== -->
+  <section class="get-started">
+    <div class="get-container">
+      <p class="tag"># Join our growing community</p>
+      <h2>Ready to Get Started?</h2>
+      <p class="subtitle">
+        Join thousands of service seekers and providers making meaningful connections every day.
+      </p>
+
+      <div class="cta-buttons">
+        <button class="btn-primary" onclick="window.location.href='/signup.html'">
+          Create Free Account
+        </button>
+        <button class="btn-secondary" onclick="document.getElementById('how-it-works').scrollIntoView({behavior:'smooth'})">
+          How It Works
+        </button>
+      </div>
+
+      <div class="badges">
+        <div class="badge">
+          <span class="icon">💸</span>
+          <div>
+            <strong>100% Free</strong><br><small>No hidden fees</small>
+          </div>
+        </div>
+        <div class="badge">
+          <span class="icon">🛡️</span>
+          <div>
+            <strong>Verified Safe</strong><br><small>Background checked</small>
+          </div>
+        </div>
+        <div class="badge">
+          <span class="icon">⭐</span>
+          <div>
+            <strong>Top Rated</strong><br><small>4.8/5 average</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
     <div class="footer-content">
@@ -171,9 +212,9 @@
       <div class="footer-links">
         <h3>Explore</h3>
         <ul>
-          <li><a href="#">Browse</a></li>
-          <li><a href="#">Providers</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="/service_seeker/browse_services.html">Browse</a></li>
+          <li><a href="/signup.html">Become a Provider</a></li>
+          <li><a href="#how-it-works">How It Works</a></li>
         </ul>
       </div>
 

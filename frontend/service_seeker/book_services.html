@@ -20,6 +20,8 @@
       <li><a href="/service_seeker/map.html">Map</a></li>
       <li><a href="/service_seeker/advanced_search.html">Advanced Search</a></li>
       <li><a href="/service_seeker/profile.html">Profile</a></li>
+      <!-- Sign out goes back to landing page -->
+      <li><a href="/index.html">Sign Out</a></li>
     </ul>
   </nav>
 
@@ -54,8 +56,7 @@
           <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
         </div>
 
-        <!-- Simple static calendar grid
-             Later you can generate this from JS / DB if you want -->
+        <!-- Simple static calendar grid -->
         <div class="calendar-grid">
           <span class="calendar-day empty"></span>
           <span class="calendar-day empty"></span>
@@ -150,8 +151,7 @@
 
           <!-- Confirm button -->
           <div class="booking-actions">
-            <button class="confirm-booking-btn">
-              <!-- just icon text, no real icon yet -->
+            <button class="confirm-booking-btn" type="button">
               ✓ Confirm Booking
             </button>
           </div>
@@ -159,7 +159,6 @@
 
         <!-- Map placeholder (for later map API / MongoDB integration) -->
         <section id="booking-map">
-          <!-- Simple text now; later replace with Leaflet / Google / Mapbox -->
           <p>Map preview will go here (service location / user location).</p>
           <p style="font-size: 0.85rem; margin-top: 0.25rem;">
             You can mount a map library here using the <code>booking-map</code> ID.
@@ -169,18 +168,47 @@
     </section>
   </main>
 
-  <!-- ======= SMALL INTERACTION SCRIPT (just visual) ======= -->
-  <script>
-    // Simple JS to highlight selected calendar day and time slot.
-    // This is only front-end behavior; later you can send these values to MongoDB.
+  <!-- ======= BOOKING CONFIRMATION MODAL ======= -->
+  <div id="bookingModal" class="booking-modal">
+    <div class="booking-modal-backdrop"></div>
 
+    <div class="booking-modal-card">
+      <button type="button" class="booking-modal-close">✕</button>
+
+      <h2>Booking Confirmed 🎉</h2>
+      <p class="booking-modal-text">
+        Your appointment has been scheduled. Here are your details:
+      </p>
+
+      <ul class="booking-summary">
+        <li><strong>Service:</strong> <span id="summaryService"></span></li>
+        <li><strong>Date:</strong> <span id="summaryDate"></span></li>
+        <li><strong>Time:</strong> <span id="summaryTime"></span></li>
+        <li><strong>Duration:</strong> <span id="summaryDuration"></span></li>
+      </ul>
+
+      <p class="booking-modal-text small">
+        You’ll be able to see this booking later in <strong>My Bookings</strong> (once it’s hooked up to MongoDB).
+      </p>
+
+      <div class="booking-modal-actions">
+        <button type="button" class="booking-modal-btn" id="modalGoBookings">
+          View My Bookings
+        </button>
+        <button type="button" class="booking-modal-btn secondary" id="modalCloseBtn">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= SMALL INTERACTION SCRIPT ======= -->
+  <script>
     // --- Calendar selection ---
     const calendarDays = document.querySelectorAll('.calendar-day:not(.empty)');
     calendarDays.forEach(day => {
       day.addEventListener('click', () => {
-        // remove selection from all
         calendarDays.forEach(d => d.classList.remove('selected'));
-        // mark clicked one
         day.classList.add('selected');
       });
     });
@@ -192,6 +220,70 @@
         timeSlots.forEach(s => s.classList.remove('selected'));
         slot.classList.add('selected');
       });
+    });
+
+    // --- Booking confirmation modal ---
+    const confirmBtn = document.querySelector('.confirm-booking-btn');
+    const bookingModal = document.getElementById('bookingModal');
+    const modalBackdrop = document.querySelector('.booking-modal-backdrop');
+    const modalCloseIcon = document.querySelector('.booking-modal-close');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalGoBookings = document.getElementById('modalGoBookings');
+
+    const serviceSelect = document.getElementById('serviceSelect');
+    const durationSelect = document.getElementById('durationSelect');
+    const summaryService = document.getElementById('summaryService');
+    const summaryDate = document.getElementById('summaryDate');
+    const summaryTime = document.getElementById('summaryTime');
+    const summaryDuration = document.getElementById('summaryDuration');
+
+    function openBookingModal() {
+      bookingModal.classList.add('open');
+    }
+
+    function closeBookingModal() {
+      bookingModal.classList.remove('open');
+    }
+
+    confirmBtn.addEventListener('click', () => {
+      const selectedDay = document.querySelector('.calendar-day.selected');
+      const selectedTime = document.querySelector('.time-slot.selected');
+
+      if (!selectedDay || !selectedTime) {
+        alert('Please select a date and a time slot before confirming your booking.');
+        return;
+      }
+
+      // Grab values from the UI
+      const dateText = `October ${selectedDay.textContent}, 2025`;
+      const timeText = selectedTime.textContent;
+      const serviceText = serviceSelect.value;
+      const durationText = durationSelect.value;
+
+      // Fill the summary fields
+      summaryService.textContent = serviceText;
+      summaryDate.textContent = dateText;
+      summaryTime.textContent = timeText;
+      summaryDuration.textContent = durationText;
+
+      openBookingModal();
+    });
+
+    // Close modal on backdrop / X / "Close"
+    [modalBackdrop, modalCloseIcon, modalCloseBtn].forEach(el => {
+      el.addEventListener('click', closeBookingModal);
+    });
+
+    // ESC key closes modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeBookingModal();
+      }
+    });
+
+    // "View My Bookings" button – for now just navigate to page
+    modalGoBookings.addEventListener('click', () => {
+      window.location.href = '/service_seeker/my_bookings.html';
     });
   </script>
 </body>

@@ -6,7 +6,9 @@
   <title>Advanced Search | Prodigy Connect</title>
   <link rel="stylesheet" href="SS_style.css"/>
 </head>
+
 <body>
+
   <!-- ======= SIDEBAR ======= -->
   <nav class="sidebar">
     <h2 class="logo">Prodigy Connect</h2>
@@ -20,11 +22,16 @@
       <li><a href="/service_seeker/map.html">Map</a></li>
       <li class="active"><a href="/service_seeker/advanced_search.html">Advanced Search</a></li>
       <li><a href="/service_seeker/profile.html">Profile</a></li>
+      <!-- 🔹 Sign out like other pages -->
+      <li><a href="/index.html">Sign Out</a></li>
     </ul>
   </nav>
 
+
   <!-- ======= MAIN CONTENT ======= -->
   <main class="main-content">
+    
+    <!-- Header -->
     <header class="header">
       <div>
         <h1>Advanced Search & Filters</h1>
@@ -36,26 +43,29 @@
       </div>
     </header>
 
-    <!-- Top search & clear bar -->
+
+    <!-- Top Search Bar -->
     <section class="adv-topbar">
       <div class="adv-search-input">
-        <input type="text" placeholder="Search services or providers..."/>
+        <!-- 🔍 search bar used by JS below -->
+        <input id="advSearchInput" type="text" placeholder="Search services or providers..."/>
       </div>
       <div class="adv-right-actions">
-        <button class="adv-clear-btn">Clear All</button>
+        <button id="advClearBtn" class="adv-clear-btn">Clear All</button>
       </div>
     </section>
 
-    <!-- Main grid: filters | results -->
+
+    <!-- ======= GRID: Filters | Results ======= -->
     <section class="adv-grid">
-      <!-- LEFT: Filters -->
+
+      <!-- LEFT = FILTERS -->
       <aside class="filter-panel">
 
         <!-- Categories -->
         <div class="filter-card">
           <h3 class="filter-title">Categories</h3>
           <ul class="category-list">
-            <!-- data-filter tells JS what group to show -->
             <li class="active" data-filter="all">All Services</li>
             <li data-filter="home">Home Services</li>
             <li data-filter="education">Education</li>
@@ -66,63 +76,48 @@
           </ul>
         </div>
 
-        <!-- Price Range (visual only for now) -->
+        <!-- (Visual only for now; JS later if needed) -->
         <div class="filter-card">
           <h3 class="filter-title">$ Price Range</h3>
           <div class="range-row">
-            <input type="range" min="0" max="200" value="0" />
-            <input type="range" min="0" max="200" value="200" />
-          </div>
-          <div class="range-nums">
-            <div class="num">
-              <span>$</span><input type="number" min="0" max="200" value="0"/>
-            </div>
-            <span class="to">to</span>
-            <div class="num">
-              <span>$</span><input type="number" min="0" max="200" value="200"/>
-            </div>
+            <input type="range" min="0" max="200" value="0"/>
+            <input type="range" min="0" max="200" value="200"/>
           </div>
         </div>
 
-        <!-- Distance -->
         <div class="filter-card">
           <h3 class="filter-title">Distance</h3>
           <input type="range" min="1" max="50" value="25"/>
-          <div class="range-help">Within <b>25 miles</b></div>
         </div>
 
-        <!-- Rating -->
         <div class="filter-card">
           <h3 class="filter-title">Minimum Rating</h3>
-          <div class="rating-choices">
-            <label><input type="radio" name="minrating"/><span>★★★★★ &amp; up</span></label>
-            <label><input type="radio" name="minrating"/><span>★★★★☆ &amp; up</span></label>
-            <label><input type="radio" name="minrating"/><span>★★★☆☆ &amp; up</span></label>
-          </div>
+          <label><input type="radio" name="rating"/> ★★★★★ &amp; up</label>
+          <label><input type="radio" name="rating"/> ★★★★☆ &amp; up</label>
+          <label><input type="radio" name="rating"/> ★★★☆☆ &amp; up</label>
         </div>
 
         <button class="apply-btn">Apply Filters</button>
       </aside>
 
-      <!-- RIGHT: Results -->
+
+      <!-- RIGHT = RESULTS -->
       <section class="results-panel">
+
         <div class="results-meta">
           <span>Showing <b>247</b> results</span>
         </div>
 
-        <!--
-          Each result card gets a data-category so JS knows what group it belongs to.
-          Later, when you hook up MongoDB, you can render these from your data.
-        -->
+        <!-- ⬇️ RESULT CARDS (STATIC FOR NOW; DB LATER) -->
 
-        <!-- Home Services -->
+        <!-- HOME SERVICES -->
         <article class="result-card" data-category="home">
           <div class="result-left">
-            <img class="avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="avatar"/>
+            <img class="avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="Plumbing icon"/>
             <div class="info">
               <h3>Plumbing Services</h3>
               <div class="sub">Mike Anderson</div>
-              <p class="desc">Experienced professional with 10+ years in the industry</p>
+              <p class="desc">Experienced professional with 10+ years in the industry.</p>
               <div class="meta">
                 <span>📍 2.5 miles away</span>
                 <span>⭐ 4.9 (124 reviews)</span>
@@ -131,134 +126,158 @@
             </div>
           </div>
           <div class="result-right">
-            <span class="price-pill">$75 – $110</span>
+            <span class="price-pill">$75–$110</span>
             <span class="per">/hour</span>
           </div>
         </article>
 
-        <!-- Education -->
+        <!-- EDUCATION -->
         <article class="result-card" data-category="education">
           <div class="result-left">
-            <img class="avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="avatar"/>
+            <img class="avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="Tutor icon"/>
             <div class="info">
-              <h3>Math & Science Tutoring</h3>
+              <h3>Math &amp; Science Tutoring</h3>
               <div class="sub">Emily Chen</div>
               <p class="desc">Certified teacher offering personalized tutoring for grades 6–12.</p>
               <div class="meta">
-                <span>📍 2.5 miles away</span>
+                <span>📍 3.1 miles away</span>
                 <span>⭐ 5.0 (89 reviews)</span>
                 <span class="badge verified">Verified</span>
               </div>
             </div>
           </div>
           <div class="result-right">
-            <span class="price-pill">$40 – $60</span>
+            <span class="price-pill">$40–$60</span>
             <span class="per">/hour</span>
           </div>
         </article>
 
-        <!-- Home Services -->
-        <article class="result-card" data-category="home">
-          <div class="result-left">
-            <img class="avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="avatar"/>
-            <div class="info">
-              <h3>Garden & Landscape Design</h3>
-              <div class="sub">David Green</div>
-              <p class="desc">Transform your outdoor space with professional landscaping services.</p>
-              <div class="meta">
-                <span>📍 2.5 miles away</span>
-                <span>⭐ 4.8 (156 reviews)</span>
-                <span class="badge verified">Verified</span>
-              </div>
-            </div>
-          </div>
-          <div class="result-right">
-            <span class="price-pill">$500 – $2000</span>
-            <span class="per">/hour</span>
-          </div>
-        </article>
-
-        <!-- Tech Services -->
+        <!-- TECH -->
         <article class="result-card" data-category="tech">
           <div class="result-left">
-            <img class="avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="avatar"/>
+            <img class="avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="Tech icon"/>
             <div class="info">
-              <h3>Web Development & Design</h3>
+              <h3>Web Development &amp; Design</h3>
               <div class="sub">Alex Rodriguez</div>
-              <p class="desc">Full-stack developer creating modern websites and web applications.</p>
+              <p class="desc">Full-stack developer creating modern websites and applications.</p>
               <div class="meta">
-                <span>📍 2.5 miles away</span>
+                <span>📍 4.2 miles away</span>
                 <span>⭐ 4.9 (94 reviews)</span>
                 <span class="badge verified">Verified</span>
               </div>
             </div>
           </div>
           <div class="result-right">
-            <span class="price-pill">$60 – $120</span>
+            <span class="price-pill">$60–$120</span>
             <span class="per">/hour</span>
           </div>
         </article>
 
-        <!-- Health & Fitness -->
+        <!-- FITNESS -->
         <article class="result-card" data-category="fitness">
           <div class="result-left">
-            <img class="avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="avatar"/>
+            <img class="avatar" src="https://cdn-icons-png.flaticon.com/512/921/921071.png" alt="Fitness icon"/>
             <div class="info">
               <h3>Personal Fitness Training</h3>
               <div class="sub">Jessica Martinez</div>
-              <p class="desc">Certified personal trainer specializing in strength and conditioning.</p>
+              <p class="desc">Specialist in strength &amp; conditioning with 8+ years experience.</p>
               <div class="meta">
-                <span>📍 2.5 miles away</span>
+                <span>📍 1.9 miles away</span>
                 <span>⭐ 4.7 (203 reviews)</span>
                 <span class="badge verified">Verified</span>
               </div>
             </div>
           </div>
           <div class="result-right">
-            <span class="price-pill">$45 – $80</span>
+            <span class="price-pill">$45–$80</span>
             <span class="per">/hour</span>
           </div>
         </article>
+
       </section>
     </section>
   </main>
 
-  <!-- ===== SIMPLE FILTER SCRIPT ===== -->
+
+  <!-- ======= FILTER + SEARCH SCRIPT ======= -->
   <script>
-    // Grab all category buttons and result cards
+    // Get DOM elements
     const categoryItems = document.querySelectorAll('.category-list li');
-    const resultCards = document.querySelectorAll('.result-card');
+    const cards = document.querySelectorAll('.result-card');
+    const searchInput = document.getElementById('advSearchInput');
+    const clearBtn = document.getElementById('advClearBtn');
 
-    // Helper function: show/hide cards based on selected filter
-    function filterResults(filter) {
-      resultCards.forEach(card => {
-        const category = card.getAttribute('data-category');
+    // Track current filters
+    let currentCategory = "all";
+    let currentSearch = "";
 
-        // "all" shows everything, otherwise match data-category
-        if (filter === 'all' || category === filter) {
-          card.style.display = 'flex';   // keep layout (flex row)
-        } else {
-          card.style.display = 'none';
-        }
+    // Extra keywords so search understands category names too
+    const categoryLabels = {
+      home: "home services plumbing repair landscaping house maintenance",
+      education: "education tutor math science teaching school homework",
+      tech: "technology tech web developer coding software it support",
+      fitness: "fitness health gym training personal trainer workout",
+      creative: "creative art design photography video media",
+      consulting: "consulting business coaching strategy advising"
+    };
+
+    // Main filter function: runs on search text or category click
+    function filterCards() {
+      const search = currentSearch.toLowerCase();
+
+      cards.forEach(card => {
+        const category = card.getAttribute("data-category");
+        const extraWords = categoryLabels[category] || "";
+
+        // Combine card text + extra category words
+        const text = (card.innerText + " " + extraWords).toLowerCase();
+
+        const categoryMatch =
+          currentCategory === "all" || category === currentCategory;
+
+        const searchMatch =
+          search === "" || text.includes(search);
+
+        card.style.display =
+          categoryMatch && searchMatch ? "flex" : "none";
       });
     }
 
-    // Add click event to each category list item
+    // Category click → set currentCategory + re-filter
     categoryItems.forEach(item => {
-      item.addEventListener('click', () => {
-        const filter = item.getAttribute('data-filter');
+      item.addEventListener("click", () => {
+        currentCategory = item.dataset.filter; // "all", "home", etc.
 
-        // Toggle active class for styling
-        categoryItems.forEach(i => i.classList.remove('active'));
-        item.classList.add('active');
+        // toggle active styling
+        categoryItems.forEach(i => i.classList.remove("active"));
+        item.classList.add("active");
 
-        // Call our filter function
-        filterResults(filter);
+        filterCards();
       });
     });
 
-    // Optional: initial state (show all)
-    filterResults('all');
+    // Typing in search box → live filter
+    searchInput.addEventListener("input", () => {
+      currentSearch = searchInput.value;
+      filterCards();
+    });
+
+    // Clear All button → reset search + category
+    clearBtn.addEventListener("click", () => {
+      searchInput.value = "";
+      currentSearch = "";
+      currentCategory = "all";
+
+      // reset active category to "All Services"
+      categoryItems.forEach(i => i.classList.remove("active"));
+      categoryItems[0].classList.add("active");
+
+      filterCards();
+    });
+
+    // Initial state = show everything
+    filterCards();
   </script>
+
 </body>
 </html>

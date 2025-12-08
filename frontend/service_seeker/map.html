@@ -35,14 +35,46 @@
       overflow-y: auto;
     }
 
+    /* search + filter rows */
+    .map-search-row {
+      margin-bottom: 0.8rem;
+    }
+
+    .map-filter-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.8rem;
+      align-items: center;
+    }
+
     .map-sidebar input,
     .map-sidebar select {
       width: 100%;
-      padding: 0.6rem 1rem;
+      padding: 0.7rem 1rem;
       border: 1px solid #ccc;
       border-radius: 8px;
-      margin-bottom: 0.8rem;
       font-size: 0.95rem;
+      box-sizing: border-box;
+    }
+
+    .map-filter-row select {
+      flex: 1;
+    }
+
+    .map-filter-btn {
+      padding: 0.65rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.9rem;
+      line-height: 1;
+      transition: 0.2s ease;
+    }
+
+    .map-filter-btn:hover {
+      background: #f3f4ff;
+      border-color: #8169ff;
     }
 
     .use-location {
@@ -144,6 +176,8 @@
       <li class="active"><a href="/service_seeker/map.html">Map</a></li>
       <li><a href="/service_seeker/advanced_search.html">Advanced Search</a></li>
       <li><a href="/service_seeker/profile.html">Profile</a></li>
+      <!-- Sign out like the other pages -->
+      <li><a href="/index.html">Sign Out</a></li>
     </ul>
   </nav>
 
@@ -163,14 +197,23 @@
     <section class="map-layout">
       <!-- Left Side -->
       <div class="map-sidebar">
-        <input id="searchInput" type="text" placeholder="Search location..." />
-        <select>
-          <option>All Categories</option>
-          <option>Home Services</option>
-          <option>Education</option>
-          <option>Health & Fitness</option>
-          <option>Tech Services</option>
-        </select>
+        <!-- bigger search bar -->
+        <div class="map-search-row">
+          <input id="searchInput" type="text" placeholder="Search location..." />
+        </div>
+
+        <!-- category + little menu button -->
+        <div class="map-filter-row">
+          <select>
+            <option>All Categories</option>
+            <option>Home Services</option>
+            <option>Education</option>
+            <option>Health & Fitness</option>
+            <option>Tech Services</option>
+          </select>
+          <button type="button" class="map-filter-btn">⚙️</button>
+        </div>
+
         <div class="use-location" id="useLocation">📍 Use My Location</div>
 
         <div class="provider-card">
@@ -228,41 +271,38 @@
     }).addTo(map);
 
     // Example service markers
-const providers = [
-  { name: "Mike Anderson - Plumbing", coords: [38.5816, -121.4944] },
-  { name: "Emily Chen - Tutoring", coords: [38.58, -121.48] },
-  { name: "David Green - Landscaping", coords: [38.44, -121.37] },
-];
+    const providers = [
+      { name: "Mike Anderson - Plumbing", coords: [38.5816, -121.4944] },
+      { name: "Emily Chen - Tutoring", coords: [38.58, -121.48] },
+      { name: "David Green - Landscaping", coords: [38.44, -121.37] },
+    ];
 
-// Store markers in an object so we can access them later
-const markers = {};
+    // Store markers in an object so we can access them later
+    const markers = {};
 
-providers.forEach((p) => {
-  const marker = L.marker(p.coords).addTo(map).bindPopup(`<b>${p.name}</b>`);
-  markers[p.name] = marker;
-});
+    providers.forEach((p) => {
+      const marker = L.marker(p.coords).addTo(map).bindPopup(`<b>${p.name}</b>`);
+      markers[p.name] = marker;
+    });
 
-// When user clicks a provider card, open its popup on the map
-document.querySelectorAll(".provider-card").forEach((card) => {
-  card.addEventListener("click", () => {
-    const name = card.querySelector("h4").textContent.trim();
-    const provider = providers.find((p) => name.includes(p.name.split(" - ")[1]));
-    if (provider && markers[provider.name]) {
-      map.setView(provider.coords, 13);
-      markers[provider.name].openPopup();
-    }
-  });
-});
+    // When user clicks a provider card, open its popup on the map
+    document.querySelectorAll(".provider-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        const name = card.querySelector("h4").textContent.trim();
+        const provider = providers.find((p) => name.includes(p.name.split(" - ")[1]));
+        if (provider && markers[provider.name]) {
+          map.setView(provider.coords, 13);
+          markers[provider.name].openPopup();
+        }
+      });
+    });
 
-
-
-
-    // ✅ Add search bar
+    // ✅ Add search bar (geocoder control)
     const geocoder = L.Control.geocoder({
       defaultMarkGeocode: true
     }).addTo(map);
 
-    // ✅ Manual search box integration (optional)
+    // ✅ Manual search box using Nominatim
     const searchInput = document.getElementById("searchInput");
     searchInput.addEventListener("keypress", async (e) => {
       if (e.key === "Enter") {
@@ -285,6 +325,26 @@ document.querySelectorAll(".provider-card").forEach((card) => {
         }
       }
     });
+
+    // Optional: use my location button (center map)
+    const useLocationBtn = document.getElementById("useLocation");
+    if (useLocationBtn && navigator.geolocation) {
+      useLocationBtn.addEventListener("click", () => {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const { latitude, longitude } = pos.coords;
+            map.setView([latitude, longitude], 13);
+            L.marker([latitude, longitude])
+              .addTo(map)
+              .bindPopup("<b>You are here</b>")
+              .openPopup();
+          },
+          () => {
+            alert("Unable to access your location.");
+          }
+        );
+      });
+    }
 
     // ✅ Auto-size fix
     setTimeout(() => map.invalidateSize(), 500);

@@ -5,6 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Profile | Prodigy Connect</title>
   <link rel="stylesheet" href="SS_style.css" />
+
+  <!-- Small modal styles (you can move this into SS_style.css later if you want) -->
+  <style>
+    .bio-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: none;              /* hidden by default */
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+
+    .bio-modal-backdrop.show {
+      display: flex;              /* show when JS adds .show */
+    }
+
+    .bio-modal {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 480px;
+      width: 90%;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+    }
+
+    .bio-modal h3 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+    }
+
+    .bio-modal textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 0.6rem 0.7rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+    }
+
+    .bio-modal-actions {
+      margin-top: 0.9rem;
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+  </style>
 </head>
 <body>
   <!-- ======= SIDEBAR ======= -->
@@ -20,6 +69,8 @@
       <li><a href="/service_seeker/map.html">Map</a></li>
       <li><a href="/service_seeker/advanced_search.html">Advanced Search</a></li>
       <li class="active"><a href="/service_seeker/profile.html">Profile</a></li>
+      <!-- 🔹 Sign Out like other pages -->
+      <li><a href="/index.html">Sign Out</a></li>
     </ul>
   </nav>
 
@@ -50,8 +101,8 @@
             <p class="location">📍 Sacramento, CA</p>
             <span class="badge">Community Member</span>
             <span class="member-since">Member since January 2024</span>
-            <p class="bio">Active member of the Prodigy Connect community. Looking for reliable service providers to help with various projects and tasks.</p>
 
+            <!-- 🔸 Bio text is NOT repeated here anymore -->
             <div class="profile-stats">
               <div><span>⭐</span> Saved Services <strong>12</strong></div>
               <div><span>📦</span> Bookings <strong>8 completed</strong></div>
@@ -67,15 +118,16 @@
         </div>
       </section>
 
-      <!-- ===== ABOUT SECTION ===== -->
+      <!-- ===== ABOUT / BIO SECTION ===== -->
       <section class="profile-about">
         <h3>About Me</h3>
-        <p>
+
+        <!-- 🔹 This is the ONLY dynamic bio text shown on the page -->
+        <p id="aboutBio">
           Active member of the Prodigy Connect community. Looking for reliable service providers to help with various projects and tasks.
         </p>
-        <p>
-          I'm actively looking for quality service providers to help with various projects. I value reliability, professionalism, and clear communication. I believe in supporting local businesses and building lasting relationships with trusted providers in my community.
-        </p>
+
+        
 
         <h4>Interests & Preferences</h4>
         <div class="interests">
@@ -87,6 +139,13 @@
 
         <h4>Service Area</h4>
         <p class="service-area">📍 Primary Location — Sacramento, CA</p>
+
+        <!-- 🔹 Update Bio button (opens popup) -->
+        <div style="margin-top: 1rem;">
+          <button id="openBioModalBtn" class="btn-primary">
+            Update Bio
+          </button>
+        </div>
       </section>
     </main>
 
@@ -119,5 +178,70 @@
       </div>
     </footer>
   </div>
+
+  <!-- ===== BIO MODAL (POPUP) ===== -->
+  <div class="bio-modal-backdrop" id="bioModalBackdrop">
+    <div class="bio-modal">
+      <h3>Edit Bio</h3>
+      <p style="font-size: 0.9rem; color: #666; margin-top: 0; margin-bottom: 0.6rem;">
+        Update how your profile describes you. (Demo only – later you can save this to MongoDB.)
+      </p>
+      <textarea id="bioModalInput"></textarea>
+      <div class="bio-modal-actions">
+        <button class="btn-secondary" id="cancelBioBtn">Cancel</button>
+        <button class="btn-primary" id="saveBioBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SIMPLE BIO MODAL SCRIPT ===== -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const aboutBio      = document.getElementById("aboutBio");
+      const openBtn       = document.getElementById("openBioModalBtn");
+      const backdrop      = document.getElementById("bioModalBackdrop");
+      const bioInput      = document.getElementById("bioModalInput");
+      const cancelBtn     = document.getElementById("cancelBioBtn");
+      const saveBtn       = document.getElementById("saveBioBtn");
+
+      function openModal() {
+        // Prefill textarea with current bio text
+        bioInput.value = (aboutBio.textContent || "").trim();
+        backdrop.classList.add("show");
+        bioInput.focus();
+      }
+
+      function closeModal() {
+        backdrop.classList.remove("show");
+      }
+
+      openBtn.addEventListener("click", openModal);
+      cancelBtn.addEventListener("click", closeModal);
+
+      saveBtn.addEventListener("click", function () {
+        const newBio = bioInput.value.trim();
+        if (!newBio) {
+          alert("Please type something for your bio before saving.");
+          return;
+        }
+
+        // Update displayed bio
+        aboutBio.textContent = newBio;
+
+        // Close modal
+        closeModal();
+
+        // Simple confirmation (no DB yet)
+        alert("Bio updated on this page (you can hook this up to MongoDB later).");
+      });
+
+      // Optional: close modal when clicking outside the box
+      backdrop.addEventListener("click", function (e) {
+        if (e.target === backdrop) {
+          closeModal();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
