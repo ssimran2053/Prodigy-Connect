@@ -69,9 +69,10 @@ const serviceSchema = new mongoose.Schema({
   },
   availability: {
     // Simple availability status for the service
-    type: String,
-    enum: ['available', 'busy', 'unavailable'],
-    default: 'available'
+    type: Array,
+    of: String,
+    enum: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Not Available'],
+    default: 'Not Available'
   },
   schedule: [{
     day: String,
