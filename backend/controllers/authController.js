@@ -154,6 +154,40 @@ export const logout = async (req, res, next) => {
   });
 };
 
+// @desc    Search for users by name or email
+// @route   GET /api/auth/search
+// @access  Private
+export const searchUsers = async (req, res, next) => {
+  try {
+    const query = req.query.q;
+    if (!query) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a search query'
+      });
+    }
+
+    const users = await User.find({
+      $and: [
+        { _id: { $ne: req.user.id } }, // Exclude current user
+        {
+          $or: [
+            { name: { $regex: query, $options: 'i' } },
+            { email: { $regex: query, $options: 'i' } }
+          ]
+        }
+      ]
+    }).select('name email avatar role');
+
+    res.status(200).json({
+      success: true,
+      data: users
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // Helper function to get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
   // Create token
@@ -171,7 +205,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     success: true,
     token,
     user: {
-      id: user._id,
+      _id: user._id,
       name: user.name,
       email: user.email,
       role: user.role,

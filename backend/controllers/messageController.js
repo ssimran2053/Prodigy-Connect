@@ -1,4 +1,4 @@
-import { Message } from '../models/Message.js';
+import { Message, Conversation } from '../models/Message.js';
 import User from '../models/User.js';
 
 // @desc    Get user's conversations
@@ -138,37 +138,46 @@ export const getMessages = async (req, res, next) => {
 export const sendMessage = async (req, res, next) => {
   try {
     const { recipient, content, bookingId } = req.body;
+    const senderId = req.user._id;
 
-    // Validate recipient exists
     const recipientUser = await User.findById(recipient);
     if (!recipientUser) {
-      return res.status(404).json({
-        success: false,
-        message: 'Recipient not found'
-      });
+      return res.status(404).json({ success: false, message: 'Recipient not found' });
     }
 
-    // Can't send message to self
-    if (recipient === req.user._id.toString()) {
-      return res.status(400).json({
-        success: false,
-        message: 'Cannot send message to yourself'
+    if (recipient === senderId.toString()) {
+      return res.status(400).json({ success: false, message: 'Cannot send message to yourself' });
+    }
+
+    let conversation = await Conversation.findOne({
+      participants: { $all: [senderId, recipient] },
+    });
+
+    if (!conversation) {
+      conversation = await Conversation.create({
+        participants: [senderId, recipient],
       });
     }
 
     const message = await Message.create({
-      sender: req.user._id,
+      conversation: conversation._id,
+      sender: senderId,
       recipient,
       content,
-      booking: bookingId || null
+      booking: bookingId || null,
     });
 
-    await message.populate('sender', 'name avatar');
-    await message.populate('recipient', 'name avatar');
+    conversation.lastMessage = message._id;
+    await conversation.save();
+
+    const populatedMessage = await message.populate([
+      { path: 'sender', select: 'name avatar' },
+      { path: 'recipient', select: 'name avatar' },
+    ]);
 
     res.status(201).json({
       success: true,
-      data: message
+      data: populatedMessage,
     });
   } catch (error) {
     next(error);
