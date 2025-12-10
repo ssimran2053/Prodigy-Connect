@@ -1,35 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import { LandingPage } from './components/LandingPage';
+import { DashboardEnhanced } from './components/DashboardEnhanced';
+import { AuthForm } from './components/AuthForm';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [currentUser, setCurrentUser] = useState(null);
+  const [showAuth, setShowAuth] = useState(false);
+
+  // Load user from local storage on initial mount
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleLogin = (user) => {
+    setCurrentUser(user);
+    setShowAuth(false);
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('token'); // Clear token on logout
+    localStorage.removeItem('user');  // Clear user data on logout
+  };
+
+  if (showAuth) {
+    return (
+      <AuthForm 
+        onLogin={handleLogin} 
+        onBack={() => setShowAuth(false)}
+      />
+    );
+  }
+
+  if (currentUser) {
+    return (
+      <DashboardEnhanced 
+        user={currentUser} 
+        onLogout={handleLogout}
+      />
+    );
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <LandingPage 
+      onGetStarted={() => setShowAuth(true)}
+    />
+  );
 }
 
-export default App
+export default App;
