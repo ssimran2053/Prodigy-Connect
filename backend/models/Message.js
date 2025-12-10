@@ -45,7 +45,7 @@ const messageSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Indexes
+// Indexes for faster queries
 messageSchema.index({ conversation: 1, createdAt: -1 });
 messageSchema.index({ sender: 1, recipient: 1 });
 
@@ -83,9 +83,6 @@ const conversationSchema = new mongoose.Schema({
 }, {
   timestamps: true
 });
-
-// Ensure only 2 participants per conversation
-conversationSchema.index({ participants: 1 }, { unique: true });
 
 export const Message = mongoose.model('Message', messageSchema);
 export const Conversation = mongoose.model('Conversation', conversationSchema);
