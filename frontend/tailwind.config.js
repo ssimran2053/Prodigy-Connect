@@ -1,0 +1,90 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        card: 'var(--card)',
+        'card-foreground': 'var(--card-foreground)',
+        popover: 'var(--popover)',
+        'popover-foreground': 'var(--popover-foreground)',
+        primary: {
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
+          hover: 'var(--primary-hover)',
+          light: 'var(--primary-light)',
+        },
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
+          hover: 'var(--secondary-hover)',
+          light: 'var(--secondary-light)',
+        },
+        muted: 'var(--muted)',
+        'muted-foreground': 'var(--muted-foreground)',
+        accent: 'var(--accent)',
+        'accent-foreground': 'var(--accent-foreground)',
+        success: {
+          DEFAULT: 'var(--success)',
+          foreground: 'var(--success-foreground)',
+          light: 'var(--success-light)',
+        },
+        warning: {
+          DEFAULT: 'var(--warning)',
+          foreground: 'var(--warning-foreground)',
+          light: 'var(--warning-light)',
+        },
+        destructive: {
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
+          light: 'var(--destructive-light)',
+        },
+        info: {
+          DEFAULT: 'var(--info)',
+          foreground: 'var(--info-foreground)',
+          light: 'var(--info-light)',
+        },
+        border: 'var(--border)',
+        input: 'var(--input)',
+        'input-background': 'var(--input-background)',
+        ring: 'var(--ring)',
+        sidebar: {
+            DEFAULT: 'var(--sidebar)',
+            foreground: 'var(--sidebar-foreground)',
+            primary: 'var(--sidebar-primary)',
+            'primary-foreground': 'var(--sidebar-primary-foreground)',
+            accent: 'var(--sidebar-accent)',
+            'accent-foreground': 'var(--sidebar-accent-foreground)',
+            border: 'var(--sidebar-border)',
+            ring: 'var(--sidebar-ring)',
+        },
+        chart: {
+          1: 'var(--chart-1)',
+          2: 'var(--chart-2)',
+          3: 'var(--chart-3)',
+          4: 'var(--chart-4)',
+          5: 'var(--chart-5)',
+        },
+      },
+      borderRadius: {
+        xl: 'var(--radius-xl)',
+        lg: 'var(--radius-lg)',
+        DEFAULT: 'var(--radius)',
+        sm: 'var(--radius-sm)',
+        full: 'var(--radius-full)',
+      },
+      fontWeight: {
+        normal: 'var(--font-weight-normal)',
+        medium: 'var(--font-weight-medium)',
+        semibold: 'var(--font-weight-semibold)',
+        bold: 'var(--font-weight-bold)',
+      },
+    },
+  },
+  plugins: [],
+}

@@ -1,1 +1,5 @@
 MONGO_URI="Paste the MONGO_URI from discord in Resources and delete the Example from the name to get a .env file"
+
+JWT_SECRET="Paste the JWT_SECRET key here, this will be found in the Resource section in discord"
+JWT_EXPIRE="30 days or any other amount of time"
+
