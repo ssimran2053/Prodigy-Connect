@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -10,6 +10,12 @@ import {
   Image,
   useToast,
   Card,
+  Input,
+  Textarea,
+  FormControl,
+  FormLabel,
+  VStack,
+  HStack
 } from '@chakra-ui/react';
 import { 
   MapPin, 
@@ -20,11 +26,86 @@ import {
   Briefcase,
   Clock,
   Shield,
+  Save,
+  X
 } from 'lucide-react';
+import { reviewsAPI, bookingsAPI, authAPI } from '../../services/api';
 
-export function ProfileView({ user, isOwnProfile }) {
+export function ProfileView({ user, isOwnProfile, onOpenSettings }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [displayUser, setDisplayUser] = useState(user);
+  const [formData, setFormData] = useState({
+    name: user.name || '',
+    location: user.location || '',
+    bio: user.bio || ''
+  });
+  const [currentRating, setCurrentRating] = useState(user.rating || 0);
+  const [completedJobsCount, setCompletedJobsCount] = useState(user.completedJobs || 0);
   const toast = useToast();
+
+  useEffect(() => {
+    setDisplayUser(user);
+    setFormData({
+      name: user.name || '',
+      location: user.location || '',
+      bio: user.bio || ''
+    });
+  }, [user]);
+
+  const handleSaveProfile = async () => {
+    try {
+      const response = await authAPI.updateDetails(formData);
+      setDisplayUser(response.data);
+      setIsEditing(false);
+      toast({
+        title: "Profile updated",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error) {
+      toast({
+        title: "Error updating profile",
+        description: error.message,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  useEffect(() => {
+    const fetchFreshData = async () => {
+      if (user.role === 'provider') {
+        try {
+          const response = await reviewsAPI.getProviderReviews(user._id);
+          const reviews = response.data || [];
+          if (reviews.length > 0) {
+            const avg = reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length;
+            setCurrentRating(avg.toFixed(1));
+          }
+
+          if (isOwnProfile) {
+            const bookingsRes = await bookingsAPI.getBookings({ status: 'completed' });
+            const count = bookingsRes.count !== undefined ? bookingsRes.count : (bookingsRes.data ? bookingsRes.data.length : 0);
+            setCompletedJobsCount(count);
+          }
+        } catch (err) {
+          console.error("Failed to fetch fresh provider data:", err);
+        }
+      } else if (user.role === 'seeker' && isOwnProfile) {
+        try {
+          const bookingsRes = await bookingsAPI.getBookings({ status: 'completed' });
+          const count = bookingsRes.count !== undefined ? bookingsRes.count : (bookingsRes.data ? bookingsRes.data.length : 0);
+          setCompletedJobsCount(count);
+        } catch (err) {
+          console.error("Failed to fetch seeker stats:", err);
+        }
+      }
+    };
+    
+    fetchFreshData();
+  }, [user, isOwnProfile]);
 
   // Admin-specific profile data
   const adminData = {
@@ -49,7 +130,7 @@ export function ProfileView({ user, isOwnProfile }) {
   };
 
   // Role-specific profile data
-  const profileData = user.role === 'admin' ? adminData : user.role === 'provider' ? {    bio: 'Professional service provider with over 15 years of experience. Committed to delivering high-quality work and excellent customer service.',
+  const profileData = displayUser.role === 'admin' ? adminData : displayUser.role === 'provider' ? {    bio: displayUser.bio || 'Professional service provider with over 15 years of experience. Committed to delivering high-quality work and excellent customer service.',
     skills: ['Licensed & Certified', 'Emergency Services', 'Free Estimates', 'Satisfaction Guaranteed'],
     experience: '15+ years',
     completedJobs: 347,
@@ -73,7 +154,7 @@ export function ProfileView({ user, isOwnProfile }) {
       }
     ]
   } : {
-    bio: 'Active member of the Prodigy Connect community. Looking for reliable service providers to help with various projects and tasks.',
+    bio: displayUser.bio || 'Active member of the Prodigy Connect community. Looking for reliable service providers to help with various projects and tasks.',
     interests: ['Home Improvement', 'Tech Support', 'Tutoring', 'Event Planning'],
     memberSince: 'January 2024',
     savedServices: 12,
@@ -98,8 +179,6 @@ export function ProfileView({ user, isOwnProfile }) {
     ]
   };
 
-  const averageRating = 4.9;
-  
 return (
     <Box maxWidth="6xl" mx="auto">
       {/* Profile Header */}
@@ -107,8 +186,8 @@ return (
         <Flex direction={{ base: 'column', md: 'row' }} gap={6}>
           <Flex direction="column" alignItems={{ base: 'center', md: 'flex-start' }}>
             <Image
-              src={user.avatar}
-              alt={user.name}
+              src={displayUser.avatar}
+              alt={displayUser.name}
               boxSize="128px"
               borderRadius="full"
               mb={4}
@@ -123,16 +202,37 @@ return (
           <Box flex="1">
             <Flex direction={{ base: 'column', md: 'row' }} alignItems="flex-start" justifyContent="space-between" mb={4}>
               <Box>
-                <Heading as="h1" size="xl" mb={2}>{user.name}</Heading>
-                <Flex alignItems="center" gap={2} color="gray.600" mb={2}>
-                  <MapPin size={16} />
-                  <Text>{user.location}</Text>
-                </Flex>
-                {user.role === 'provider' && (
+                {isEditing ? (
+                  <VStack align="start" spacing={3} mb={4}>
+                    <FormControl>
+                      <FormLabel>Name</FormLabel>
+                      <Input 
+                        value={formData.name} 
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>Location</FormLabel>
+                      <Input 
+                        value={formData.location} 
+                        onChange={(e) => setFormData({...formData, location: e.target.value})}
+                      />
+                    </FormControl>
+                  </VStack>
+                ) : (
+                  <>
+                    <Heading as="h1" size="xl" mb={2}>{displayUser.name}</Heading>
+                    <Flex alignItems="center" gap={2} color="gray.600" mb={2}>
+                      <MapPin size={16} />
+                      <Text>{displayUser.location}</Text>
+                    </Flex>
+                  </>
+                )}
+                {displayUser.role === 'provider' && (
                   <Flex alignItems="center" gap={4} mb={2}>
                     <Flex alignItems="center" gap={1}>
                       <Star size={20} color="orange" fill="orange" />
-                      <Text fontSize="lg">{averageRating}</Text>
+                      <Text fontSize="lg">{currentRating}</Text>
                     </Flex>
                     <Badge colorScheme="yellow">
                       <Award size={12} style={{ marginRight: '4px' }} />
@@ -140,7 +240,7 @@ return (
                     </Badge>
                   </Flex>
                 )}
-                {user.role === 'seeker' && (
+                {displayUser.role === 'seeker' && (
                   <Flex alignItems="center" gap={4} mb={2}>
                     <Badge variant="outline">
                       Community Member
@@ -150,7 +250,7 @@ return (
                     </Text>
                   </Flex>
                 )}
-                {user.role === 'admin' && (
+                {displayUser.role === 'admin' && (
                   <Flex alignItems="center" gap={4} mb={2}>
                     <Badge variant="outline">
                       {adminData.role}
@@ -165,10 +265,17 @@ return (
               <Flex gap={2} mt={{ base: 4, md: 0 }}>
                 {isOwnProfile ? (
                   <>
-                    <Button onClick={() => setIsEditing(!isEditing)}>
-                      {isEditing ? 'Save Profile' : 'Edit Profile'}
-                    </Button>
-                    <Button variant="outline" onClick={() => toast({ title: 'Settings panel would open here', status: 'info' })}>Settings</Button>
+                    {isEditing ? (
+                      <HStack>
+                        <Button onClick={handleSaveProfile} colorScheme="blue" leftIcon={<Save size={16} />}>Save</Button>
+                        <Button onClick={() => setIsEditing(false)} variant="ghost" leftIcon={<X size={16} />}>Cancel</Button>
+                      </HStack>
+                    ) : (
+                      <Button onClick={() => setIsEditing(true)}>
+                        Edit Profile
+                      </Button>
+                    )}
+                    <Button variant="outline" onClick={onOpenSettings}>Settings</Button>
                   </>
                 ) : (
                   <>
@@ -183,9 +290,20 @@ return (
               </Flex>
             </Flex>
 
-            <Text color="gray.600" mb={4}>{profileData.bio}</Text>
+            {isEditing ? (
+              <FormControl mb={4}>
+                <FormLabel>Bio</FormLabel>
+                <Textarea 
+                  value={formData.bio} 
+                  onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                  rows={4}
+                />
+              </FormControl>
+            ) : (
+              <Text color="gray.600" mb={4}>{profileData.bio}</Text>
+            )}
 
-            {user.role === 'provider' && (
+            {displayUser.role === 'provider' && (
               <Grid templateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }} gap={4}>
                 <Flex alignItems="center" gap={2}>
                   <Briefcase size={20} color="blue" />
@@ -198,7 +316,7 @@ return (
                   <Award size={20} color="blue" />
                   <Box>
                     <Text fontSize="sm" color="gray.600">Completed</Text>
-                    <Text>{profileData.completedJobs} jobs</Text>
+                    <Text>{completedJobsCount} jobs</Text>
                   </Box>
                 </Flex>
                 <Flex alignItems="center" gap={2}>
@@ -218,7 +336,7 @@ return (
               </Grid>
             )}
             
-            {user.role === 'seeker' && (
+            {displayUser.role === 'seeker' && (
                 <Grid templateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }} gap={4}>
                     <Flex alignItems="center" gap={2}>
                         <Star size={20} color="blue" />
@@ -231,7 +349,7 @@ return (
                         <Award size={20} color="blue" />
                         <Box>
                         <Text fontSize="sm" color="gray.600">Bookings</Text>
-                        <Text>{profileData.bookingsCompleted} completed</Text>
+                        <Text>{completedJobsCount} completed</Text>
                         </Box>
                     </Flex>
                     <Flex alignItems="center" gap={2}>
@@ -251,7 +369,7 @@ return (
                 </Grid>
             )}
 
-            {user.role === 'admin' && (
+            {displayUser.role === 'admin' && (
                 <Grid templateColumns={{ base: 'repeat(2, 1fr)', md: 'repeat(4, 1fr)' }} gap={4}>
                     <Flex alignItems="center" gap={2}>
                         <Briefcase size={20} color="blue" />
@@ -288,7 +406,7 @@ return (
       </Card>
 
       <Card p={6}>
-        {user.role === 'admin' && (
+        {displayUser.role === 'admin' && (
           <>
             <Box>
               <Heading as="h2" size="lg" mb={4}>About Me</Heading>
@@ -330,12 +448,12 @@ return (
           </>
         )}
 
-        {user.role !== 'admin' && (
+        {displayUser.role !== 'admin' && (
           <>
             <Box>
               <Heading as="h2" size="lg" mb={4}>About Me</Heading>
               <Text color="gray.700" mb={4}>{profileData.bio}</Text>
-              {user.role === 'provider' ? (
+              {displayUser.role === 'provider' ? (
                 <Text color="gray.700">
                   I'm dedicated to providing top-notch service to every client. With extensive
                   experience in the field and a commitment to customer satisfaction, I ensure
@@ -353,10 +471,10 @@ return (
 
             <Box mt={6}>
               <Heading as="h3" size="md" mb={3}>
-                {user.role === 'provider' ? 'Skills & Certifications' : 'Interests & Preferences'}
+                {displayUser.role === 'provider' ? 'Skills & Certifications' : 'Interests & Preferences'}
               </Heading>
               <Flex flexWrap="wrap" gap={2}>
-                {user.role === 'provider' ? (
+                {displayUser.role === 'provider' ? (
                   profileData.skills.map((skill, index) => (
                     <Badge key={index} colorScheme="gray">{skill}</Badge>
                   ))

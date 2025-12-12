@@ -107,7 +107,20 @@ export const createService = async (req, res, next) => {
     // Add user as provider
     req.body.provider = req.user.id;
 
-    const service = await Service.create(req.body);
+    const serviceData = { ...req.body };
+
+    // If a file is uploaded, add its path to the service data
+    if (req.file) {
+      // We construct a URL path that the frontend can use.
+      // e.g., /uploads/image-1678886400000.jpg
+      serviceData.image = `/uploads/${req.file.filename}`;
+    }
+
+    if (serviceData.price) {
+      serviceData.price = { amount: parseFloat(serviceData.price) };
+    }
+
+    const service = await Service.create(serviceData);
 
     res.status(201).json({
       success: true,
@@ -140,7 +153,14 @@ export const updateService = async (req, res, next) => {
       });
     }
 
-    service = await Service.findByIdAndUpdate(req.params.id, req.body, {
+    const updateData = { ...req.body };
+
+    // If price is sent as a number, convert it to the expected object format
+    if (updateData.price && typeof updateData.price === 'number') {
+      updateData.price = { amount: updateData.price };
+    }
+
+    service = await Service.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
       runValidators: true
     });
@@ -193,8 +213,7 @@ export const deleteService = async (req, res, next) => {
 export const getProviderServices = async (req, res, next) => {
   try {
     const services = await Service.find({
-      provider: req.params.providerId,
-      isActive: true
+      provider: req.params.providerId
     }).populate('provider', 'name avatar rating');
 
     res.status(200).json({

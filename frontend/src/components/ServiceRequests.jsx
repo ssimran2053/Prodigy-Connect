@@ -33,7 +33,7 @@ import {
   AlertIcon,
   Center
 } from '@chakra-ui/react';
-import { TimeIcon, CheckCircleIcon, CloseIcon, ChatIcon, CalendarIcon, AtSignIcon } from '@chakra-ui/icons';
+import { TimeIcon, CheckCircleIcon, CloseIcon, ChatIcon, CalendarIcon, InfoIcon, ViewIcon } from '@chakra-ui/icons';
 import { bookingsAPI } from '../../services/api';
 
 
@@ -50,8 +50,9 @@ export function ServiceRequests({ user }) {
     const fetchRequests = async () => {
       try {
         setLoading(true);
-        if (user && user.id) {
-          const response = await bookingsAPI.getBookings({ providerId: user.id });
+        const userId = user?._id || user?.id;
+        if (userId) {
+          const response = await bookingsAPI.getBookings({ providerId: userId });
           setRequests(response.data);
         } else {
           setRequests([]);
@@ -70,13 +71,14 @@ export function ServiceRequests({ user }) {
       }
     };
 
-    if (user?.id) {
+    const userId = user?._id || user?.id;
+    if (userId) {
       fetchRequests();
     } else {
       setLoading(false);
       setRequests([]);
     }
-  }, [user?.id, toast]);
+  }, [user, toast]);
 
 
   const handleAcceptRequest = async (requestId) => {
@@ -84,7 +86,7 @@ export function ServiceRequests({ user }) {
     try {
       await bookingsAPI.confirmBooking(requestId);
       setRequests(requests.map(r =>
-        r.id === requestId ? { ...r, status: 'accepted' } : r
+        (r._id || r.id) === requestId ? { ...r, status: 'confirmed' } : r
       ));
       toast({
         title: 'Request accepted! Client will be notified.',
@@ -108,7 +110,7 @@ export function ServiceRequests({ user }) {
 
   const handleDeclineRequest = (requestId) => {
     setRequests(requests.map(r =>
-      r.id === requestId ? { ...r, status: 'declined' } : r
+      (r._id || r.id) === requestId ? { ...r, status: 'declined' } : r
     ));
     toast({
       title: 'Request declined',
@@ -117,6 +119,32 @@ export function ServiceRequests({ user }) {
       isClosable: true,
     });
     setShowResponseDialog(false);
+  };
+
+  const handleCompleteRequest = async (requestId) => {
+    setLoading(true);
+    try {
+      await bookingsAPI.completeBooking(requestId);
+      setRequests(requests.map(r =>
+        (r._id || r.id) === requestId ? { ...r, status: 'completed' } : r
+      ));
+      toast({
+        title: 'Request marked as completed!',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    } catch (err) {
+      toast({
+        title: 'Failed to complete request',
+        description: err.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleRespondToRequest = (request) => {
@@ -146,55 +174,71 @@ export function ServiceRequests({ user }) {
     }
   };
 
+  const formatLocation = (location) => {
+    if (!location) return 'Remote';
+    if (typeof location === 'string') return location;
+    if (location.address || location.city || location.state) {
+        return [location.address, location.city, location.state].filter(Boolean).join(', ');
+    }
+    return 'Remote';
+  };
+
+  const formatPrice = (price) => {
+      if (!price) return 'N/A';
+      if (typeof price === 'number') return `$${price}`;
+      if (price.amount) return `$${price.amount}`;
+      return 'N/A';
+  };
+
   const RequestCard = ({ request }) => (
     <Card>
         <CardBody>
             <Flex justify="space-between" mb={3}>
                 <HStack align="start" spacing={3} flex="1">
                 <Image
-                    src={request.seeker.avatar}
-                    alt={request.seeker.name}
+                    src={request.seeker?.avatar}
+                    alt={request.seeker?.name}
                     boxSize="12"
                     borderRadius="full"
+                    fallbackSrc="https://via.placeholder.com/150"
                 />
                 <Box>
                     <HStack mb={1}>
-                    <Heading size="sm">{request.seeker.name}</Heading>
-                    <HStack>
-                        <Text color="yellow.500">★</Text>
-                        <Text fontSize="sm">{request.seeker.rating}</Text>
+                    <Heading size="sm">{request.seeker?.name || 'Unknown User'}</Heading>
+                    {request.seeker?.rating && (
+                        <HStack>
+                            <Text color="yellow.500">★</Text>
+                            <Text fontSize="sm">{request.seeker.rating}</Text>
+                        </HStack>
+                    )}
                     </HStack>
-                    </HStack>
-                    <Text fontSize="sm" color="gray.600">{formatTimeAgo(request.timestamp)}</Text>
+                    <Text fontSize="sm" color="gray.600">{formatTimeAgo(request.createdAt)}</Text>
                 </Box>
                 </HStack>
-                <Badge colorScheme={getUrgencyColor(request.urgency)}>
-                {request.urgency} priority
-                </Badge>
             </Flex>
     
             <Box mb={3}>
                 <Flex justify="space-between" mb={2}>
-                <Heading size="sm">{request.serviceType}</Heading>
-                <Badge variant="outline">{request.category}</Badge>
+                <Heading size="sm">{request.service?.title || 'Service'}</Heading>
+                <Badge variant="outline">{request.service?.category || 'General'}</Badge>
                 </Flex>
                 <Text fontSize="sm" color="gray.600" noOfLines={2}>
-                {request.description}
+                {request.notes || 'No additional notes provided.'}
                 </Text>
             </Box>
     
             <Grid templateColumns="repeat(2, 1fr)" gap={2} mb={4} fontSize="sm">
                 <HStack color="gray.600">
-                <AtSignIcon />
-                <Text>{request.budget}</Text>
+                <InfoIcon />
+                <Text>{formatPrice(request.price)}</Text>
                 </HStack>
                 <HStack color="gray.600">
                 <CalendarIcon />
-                <Text>{request.timeframe}</Text>
+                <Text>{new Date(request.scheduledDate).toLocaleDateString()} {request.scheduledTime}</Text>
                 </HStack>
                 <HStack color="gray.600" gridColumn="span 2">
-                <AtSignIcon />
-                <Text>{request.location}</Text>
+                <ViewIcon />
+                <Text>{formatLocation(request.location)}</Text>
                 </HStack>
             </Grid>
     
@@ -213,7 +257,7 @@ export function ServiceRequests({ user }) {
                     size="sm"
                     variant="outline"
                     flex="1"
-                    onClick={() => handleDeclineRequest(request.id)}
+                    onClick={() => handleDeclineRequest(request._id || request.id)}
                     leftIcon={<CloseIcon />}
                 >
                     Decline
@@ -228,15 +272,23 @@ export function ServiceRequests({ user }) {
                 </HStack>
             )}
     
-            {request.status === 'accepted' && (
+            {request.status === 'confirmed' && (
                 <HStack>
                 <Badge colorScheme="green">
-                    Accepted - Awaiting Booking
+                    Confirmed - Awaiting Booking
                 </Badge>
                 <Button
                     size="sm"
-                    variant="outline"
+                    colorScheme="green"
                     ml="auto"
+                    onClick={() => handleCompleteRequest(request._id || request.id)}
+                    leftIcon={<CheckCircleIcon />}
+                >
+                    Complete
+                </Button>
+                <Button
+                    size="sm"
+                    variant="outline"
                     onClick={() => toast({ title: 'Opening message thread...', status: 'info', duration: 3000, isClosable: true })}
                     leftIcon={<ChatIcon />}
                 >
@@ -310,8 +362,8 @@ export function ServiceRequests({ user }) {
                 <CardBody>
                     <Flex justify="space-between">
                         <Box>
-                        <Text fontSize="sm" color="gray.600">Accepted</Text>
-                        <Heading size="lg">{getRequestsByStatus('accepted').length}</Heading>
+                        <Text fontSize="sm" color="gray.600">Confirmed</Text>
+                        <Heading size="lg">{getRequestsByStatus('confirmed').length}</Heading>
                         </Box>
                         <Center w="12" h="12" borderRadius="full" bg="green.100">
                         <CheckCircleIcon color="green.600" />
@@ -356,7 +408,7 @@ export function ServiceRequests({ user }) {
                 Pending ({getRequestsByStatus('pending').length})
               </Tab>
               <Tab>
-                Accepted ({getRequestsByStatus('accepted').length})
+                Confirmed ({getRequestsByStatus('confirmed').length})
               </Tab>
               <Tab>
                 Completed ({getRequestsByStatus('completed').length})
@@ -371,7 +423,7 @@ export function ServiceRequests({ user }) {
                 {getRequestsByStatus('pending').length > 0 ? (
                     <VStack spacing={4}>
                         {getRequestsByStatus('pending').map(request => (
-                        <RequestCard key={request.id} request={request} />
+                        <RequestCard key={request._id || request.id} request={request} />
                         ))}
                     </VStack>
                 ) : (
@@ -382,15 +434,15 @@ export function ServiceRequests({ user }) {
               </TabPanel>
 
               <TabPanel>
-                {getRequestsByStatus('accepted').length > 0 ? (
+                {getRequestsByStatus('confirmed').length > 0 ? (
                     <VStack spacing={4}>
-                        {getRequestsByStatus('accepted').map(request => (
-                        <RequestCard key={request.id} request={request} />
+                        {getRequestsByStatus('confirmed').map(request => (
+                        <RequestCard key={request._id || request.id} request={request} />
                         ))}
                     </VStack>
                 ) : (
                     <Center py={12}>
-                    <Text color="gray.600">No accepted requests</Text>
+                    <Text color="gray.600">No confirmed requests</Text>
                     </Center>
                 )}
               </TabPanel>
@@ -399,7 +451,7 @@ export function ServiceRequests({ user }) {
                 {getRequestsByStatus('completed').length > 0 ? (
                     <VStack spacing={4}>
                         {getRequestsByStatus('completed').map(request => (
-                        <RequestCard key={request.id} request={request} />
+                        <RequestCard key={request._id || request.id} request={request} />
                         ))}
                     </VStack>
                 ) : (
@@ -412,7 +464,7 @@ export function ServiceRequests({ user }) {
               <TabPanel>
                 <VStack spacing={4}>
                     {requests.map(request => (
-                    <RequestCard key={request.id} request={request} />
+                    <RequestCard key={request._id || request.id} request={request} />
                     ))}
                 </VStack>
               </TabPanel>
@@ -431,12 +483,12 @@ export function ServiceRequests({ user }) {
                   <VStack spacing={4} align="stretch">
                     <Box p={3} bg="gray.50" borderRadius="lg">
                       <Text fontSize="sm" mb={1} color="gray.600">Service Type</Text>
-                      <Text>{selectedRequest.serviceType}</Text>
+                      <Text>{selectedRequest.service?.title}</Text>
                     </Box>
 
                     <Box p={3} bg="gray.50" borderRadius="lg">
                       <Text fontSize="sm" mb={1} color="gray.600">Client</Text>
-                      <Text>{selectedRequest.seeker.name}</Text>
+                      <Text>{selectedRequest.seeker?.name}</Text>
                     </Box>
 
                     <FormControl>
@@ -461,7 +513,7 @@ export function ServiceRequests({ user }) {
                 </Button>
                 <Button
                   colorScheme="blue"
-                  onClick={() => selectedRequest && handleAcceptRequest(selectedRequest.id)}
+                  onClick={() => selectedRequest && handleAcceptRequest(selectedRequest._id || selectedRequest.id)}
                 >
                   Accept Request
                 </Button>

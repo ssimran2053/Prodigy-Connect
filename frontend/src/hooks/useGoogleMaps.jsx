@@ -3,6 +3,66 @@ import API from '../../services/api';
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
+// Create a single source of truth for the script loading status
+let mapInitializationPromise = null;
+
+const loadScript = () => {
+    if (mapInitializationPromise) {
+        return mapInitializationPromise;
+    }
+
+    mapInitializationPromise = new Promise((resolve, reject) => {
+        // If script is already loaded
+        if (window.google && window.google.maps) {
+            console.log("Google Maps already loaded.");
+            return resolve();
+        }
+
+        const existingScript = document.getElementById('google-maps-script');
+        if (existingScript) {
+             // If script is in the DOM but not loaded, wait for it
+             existingScript.addEventListener('load', () => resolve());
+             existingScript.addEventListener('error', (e) => reject(e));
+             return;
+        }
+
+        if (!GOOGLE_MAPS_API_KEY) {
+            return reject(new Error("VITE_GOOGLE_MAPS_API_KEY is not configured in .env file."));
+        }
+
+        const script = document.createElement('script');
+        // Use v=beta for AdvancedMarkerElement and other new features.
+        // Remove libraries from here, they will be loaded dynamically.
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&v=beta`;
+        script.id = 'google-maps-script';
+        script.async = true;
+        
+        script.onload = () => {
+            console.log("Google Maps script loaded successfully.");
+            // Wait for the importLibrary function to be available
+            const checkGoogleMapsReady = () => {
+                if (window.google && window.google.maps && typeof window.google.maps.importLibrary === 'function') {
+                    resolve();
+                } else {
+                    // If not ready, check again after a short delay
+                    setTimeout(checkGoogleMapsReady, 100);
+                }
+            };
+            checkGoogleMapsReady();
+        };
+        
+        script.onerror = (error) => {
+            console.error("Error loading Google Maps script:", error);
+            reject(new Error("Failed to load Google Maps script."));
+        };
+
+        document.head.appendChild(script);
+    });
+
+    return mapInitializationPromise;
+};
+
+
 /**
  * Custom hook for Google Maps functionality
  */
@@ -11,34 +71,12 @@ export function useGoogleMaps() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!GOOGLE_MAPS_API_KEY) {
-      setError('Google Maps API key not configured');
-      return;
-    }
-
-    if (window.google && window.google.maps) {
-      setIsLoaded(true);
-      return;
-    }
-
-    const existingScript = document.querySelector('script[src^="https://maps.googleapis.com/maps/api/js"]');
-    if (existingScript) {
-      const handleLoad = () => setIsLoaded(true);
-      existingScript.addEventListener('load', handleLoad);
-      return () => existingScript.removeEventListener('load', handleLoad);
-    }
-
-    const script = document.createElement('script');
-    // ADDED: &loading=async callback=initMap
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_MAPS_API_KEY}&libraries=places&loading=async&v=weekly`;
-    script.async = true;
-    script.defer = true;
-    script.id = 'google-maps-script';
-
-    script.onload = () => setIsLoaded(true);
-    script.onerror = () => setError('Failed to load Google Maps');
-
-    document.head.appendChild(script);
+    loadScript()
+        .then(() => setIsLoaded(true))
+        .catch((err) => {
+            setError(err.message);
+            console.error(err);
+        });
   }, []);
 
   return { isLoaded, error };
@@ -55,8 +93,20 @@ export function useGeocoding() {
     setLoading(true);
     setError(null);
     try {
-      const result = await API.maps.geocodeAddress(address);
-      return result.data;
+      // Use searchPlaces for more flexible searching (e.g., "walmart")
+      const result = await API.maps.searchPlaces(address);
+
+      if (result.data && result.data.length > 0) {
+        return result.data; // Return all results
+      }
+
+      // Fallback to geocode if search returns no results
+      const geoResult = await API.maps.geocodeAddress(address);
+      if (geoResult.data) {
+        return [geoResult.data]; // Wrap in array for consistency
+      }
+
+      throw new Error('Address not found');
     } catch (err) {
       setError(err.message);
       throw err;

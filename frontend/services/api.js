@@ -153,10 +153,16 @@ export const servicesAPI = {
 
   // Create new service
   createService: async (serviceData) => {
+    // When sending FormData, we don't set the Content-Type header.
+    // The browser does it automatically with the correct boundary.
+    const headers = getHeaders();
+    if (serviceData instanceof FormData) {
+      delete headers['Content-Type'];
+    }
     const response = await fetch(`${API_URL}/services`, {
       method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(serviceData),
+      headers: headers,
+      body: serviceData instanceof FormData ? serviceData : JSON.stringify(serviceData),
     });
     return handleResponse(response);
   },

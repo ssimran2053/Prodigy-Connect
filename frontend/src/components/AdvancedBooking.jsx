@@ -47,7 +47,7 @@ export function AdvancedBooking({ user, serviceToBook }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedService, setSelectedService] = useState('');
-  const [selectedDuration, setSelectedDuration] = useState('2 hours - $110');
+  const [selectedDuration, setSelectedDuration] = useState(1);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const toast = useToast();
 
@@ -84,6 +84,18 @@ export function AdvancedBooking({ user, serviceToBook }) {
     }
   }, [serviceToBook]);
 
+  const currentService = services.find(s => s._id === selectedService);
+
+  const calculateTotalPrice = () => {
+    if (!currentService) return 0;
+    const price = currentService.price?.amount || 0;
+    const type = currentService.price?.type || 'hourly';
+    
+    if (type === 'hourly') {
+      return price * selectedDuration;
+    }
+    return price;
+  };
 
   const handleConfirmBooking = async () => {
     if (!user) {
@@ -107,8 +119,7 @@ export function AdvancedBooking({ user, serviceToBook }) {
       return;
     }
 
-    // This is not ideal, in a real application, you would have a more robust way to handle this
-    const priceAmount = parseFloat(selectedDuration.split('$')[1]);
+    const totalPrice = calculateTotalPrice();
 
     const bookingData = {
       service: service._id,
@@ -116,10 +127,10 @@ export function AdvancedBooking({ user, serviceToBook }) {
       seeker: user._id,
       scheduledDate: selectedDate,
       scheduledTime: selectedTime,
-      duration: parseFloat(selectedDuration.split(' ')[0]),
+      duration: selectedDuration,
       price: {
-        amount: priceAmount,
-        currency: 'USD'
+        amount: totalPrice,
+        currency: service.price?.currency || 'USD'
       },
     };
 
@@ -214,11 +225,17 @@ export function AdvancedBooking({ user, serviceToBook }) {
 
                     <Box>
                       <Text mb="2" fontSize="sm">Duration</Text>
-                      <Select value={selectedDuration} onChange={(e) => setSelectedDuration(e.target.value)}>
-                        <option>1 hour - $60</option>
-                        <option>2 hours - $110</option>
-                        <option>3 hours - $150</option>
+                      <Select 
+                        value={selectedDuration} 
+                        onChange={(e) => setSelectedDuration(Number(e.target.value))}
+                        isDisabled={currentService?.price?.type !== 'hourly'}
+                      >
+                        <option value={1}>1 hour</option>
+                        <option value={2}>2 hours</option>
+                        <option value={3}>3 hours</option>
+                        <option value={4}>4 hours</option>
                       </Select>
+                      <Text mt={2} fontSize="sm" color="gray.600">Total: ${calculateTotalPrice()}</Text>
                     </Box>
 
                     <Button 
@@ -277,7 +294,7 @@ export function AdvancedBooking({ user, serviceToBook }) {
                     </HStack>
                     <HStack>
                       <Text w="120px" color="gray.600">Duration & Cost:</Text>
-                      <Text>{selectedDuration}</Text>
+                      <Text>{selectedDuration} hour(s) - ${calculateTotalPrice()}</Text>
                     </HStack>
                   </VStack>
                 </Box>
