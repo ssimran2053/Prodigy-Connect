@@ -1,7 +1,15 @@
 // API Service for Prodigy Connect
 // Handles all HTTP requests to the backend
 
-const API_URL = (import.meta.env && import.meta.env.VITE_API_URL) || 'http://localhost:5001/api';
+let apiBase = (import.meta.env && import.meta.env.VITE_API_URL) || 'http://localhost:5001';
+
+// Remove trailing slash if present
+if (apiBase.endsWith('/')) {
+  apiBase = apiBase.slice(0, -1);
+}
+
+// Ensure API_URL ends with /api
+const API_URL = apiBase.endsWith('/api') ? apiBase : `${apiBase}/api`;
 
 // Helper function to get auth token
 const getAuthToken = () => {
