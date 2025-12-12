@@ -23,8 +23,10 @@ import {
   Textarea,
   Select,
   useToast,
-  useDisclosure
+  useDisclosure,
+  Image,
 } from '@chakra-ui/react';
+import { CloseIcon } from '@chakra-ui/icons';
 import { 
   User as UserIcon, 
   Bell, 
@@ -129,13 +131,12 @@ export function SettingsPanel({ user, onClose }) {
       justify="center"
       zIndex="overlay"
       p="4"
-      overflowY="auto"
     >
       <Card maxW="4xl" w="full" my="8" onClick={e => e.stopPropagation()}>
         <CardBody p="6">
           <Flex justify="space-between" align="center" mb="6">
             <Heading as="h2" size="xl">Settings</Heading>
-            <IconButton icon={<X size="20" />} onClick={onClose} variant="ghost" aria-label="Close settings" />
+            <IconButton icon={<CloseIcon />} onClick={onClose} variant="ghost" aria-label="Close settings" />
           </Flex>
 
           <Tabs variant="enclosed" colorScheme="blue" isLazy>
@@ -146,7 +147,7 @@ export function SettingsPanel({ user, onClose }) {
               <Tab>Account</Tab>
             </TabList>
 
-            <TabPanels>
+            <TabPanels overflowY="auto" maxH="60vh">
               {/* Profile Tab */}
               <TabPanel>
                 <VStack spacing="6" align="stretch">

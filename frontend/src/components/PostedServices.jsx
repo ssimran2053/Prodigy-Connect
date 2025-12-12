@@ -19,6 +19,7 @@ import {
   ModalOverlay,
   ModalContent,
   ModalHeader,
+  ModalCloseButton,
   ModalBody,
   ModalFooter,
   FormControl,
@@ -28,36 +29,70 @@ import {
   IconButton,
   Spinner, // Import Spinner for loading state
   Alert, // Import Alert for error state
-  AlertIcon
+  AlertIcon,
+  useDisclosure
 } from '@chakra-ui/react';
 import { AddIcon, EditIcon, DeleteIcon, InfoIcon, ViewIcon, StarIcon, CheckCircleIcon } from '@chakra-ui/icons';
 import { servicesAPI } from '../../services/api';
+import { PostServiceModal } from './PostServiceModal';
+import PlaceholderImage from '../assets/c4928b5b313acf796a0d321d9c48650523bf2f6f.png';
 
+const API_BASE_URL = (import.meta.env && import.meta.env.VITE_API_URL) || 'http://localhost:5001';
+
+const getImageUrl = (path) => {
+  if (!path) return PlaceholderImage;
+  if (path.startsWith('http') || path.startsWith('data:')) return path;
+  
+  let baseUrl = API_BASE_URL;
+  
+  // Handle trailing slash
+  if (baseUrl.endsWith('/')) {
+    baseUrl = baseUrl.slice(0, -1);
+  }
+  
+  // If the base URL ends with /api, remove it because static files are usually at root
+  if (baseUrl.endsWith('/api')) {
+    baseUrl = baseUrl.slice(0, -4);
+  }
+    
+  return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`;
+};
+
+const formatPrice = (price) => {
+  if (!price) return 'N/A';
+  if (typeof price === 'number') return `$${price}`;
+  if (typeof price === 'object' && typeof price.amount !== 'undefined') {
+    const amount = price.currency === 'USD' ? `$${price.amount}` : `${price.amount} ${price.currency}`;
+    if (price.type === 'hourly') return `${amount}/hr`;
+    return amount;
+  }
+  return 'Inquire for price';
+};
+
+const formatLocation = (location) => {
+  if (!location) return 'N/A';
+  if (typeof location === 'string') return location;
+  if (location.city && location.state) return `${location.city}, ${location.state}`;
+  if (location.city) return location.city;
+  if (location.address) return location.address;
+  return 'Remote';
+};
 
 export function PostedServices({ user }) {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showAddService, setShowAddService] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [editingService, setEditingService] = useState(null);
-  const [newService, setNewService] = useState({
-    title: '',
-    category: 'Home Services',
-    description: '',
-    price: '',
-    location: user.location || 'Sacramento, CA',
-    tags: ''
-  });
   const toast = useToast();
-
-  const categories = ['Home Services', 'Education', 'Tech Services', 'Health & Fitness', 'Creative Services', 'Business Services'];
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
         setLoading(true);
-        if (user && user.id) {
-          const response = await servicesAPI.getProviderServices(user.id);
+        const userId = user?._id || user?.id;
+        if (userId) {
+          const response = await servicesAPI.getProviderServices(userId);
           setServices(response.data);
         } else {
           console.warn('User or user.id is not available, cannot fetch services.');
@@ -77,72 +112,24 @@ export function PostedServices({ user }) {
       }
     };
 
-    if (user?.id) {
+    const userId = user?._id || user?.id;
+    if (userId) {
       fetchServices();
     } else {
       setLoading(false);
       setServices([]);
     }
-  }, [user?.id, toast]);
+  }, [user?._id, toast]);
 
-
-  const handleAddService = async () => {
-    if (!newService.title || !newService.description || !newService.price || !newService.category) {
-      toast({
-        title: 'Please fill in all required fields.',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const serviceData = {
-        ...newService,
-        price: parseFloat(newService.price),
-        tags: newService.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
-        provider: user.id, // Assign the current user as the provider
-        location: newService.location || user.location || 'Sacramento, CA',
-        image: 'https://images.unsplash.com/photo-1741544486057-56d132dbb799?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBzZXJ2aWNlJTIwd29ya2VyfGVufDF8fHx8MTc1OTk5NTIyNHww&ixlib=rb-4.1.0&q=80&w=1080', // Hardcoded for now
-      };
-      
-      const response = await servicesAPI.createService(serviceData);
-      setServices([response.data, ...services]); // Use data from backend response
-      setShowAddService(false);
-      setNewService({
-        title: '',
-        category: 'Home Services',
-        description: '',
-        price: '',
-        location: user.location || 'Sacramento, CA',
-        tags: ''
-      });
-      toast({
-          title: 'Service posted successfully!',
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        });
-    } catch (err) {
-      toast({
-        title: 'Failed to post service',
-        description: err.message,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-    } finally {
-      setLoading(false);
-    }
+  const handleServicePosted = (newService) => {
+    setServices([newService, ...services]);
   };
-
+  
   const handleDeleteService = async (serviceId) => {
     setLoading(true);
     try {
       await servicesAPI.deleteService(serviceId);
-      setServices(services.filter(s => s.id !== serviceId));
+      setServices(services.filter(s => (s._id || s.id) !== serviceId));
       toast({
           title: 'Service deleted successfully',
           status: 'success',
@@ -163,9 +150,9 @@ export function PostedServices({ user }) {
   };
 
   const handleToggleStatus = async (serviceId) => {
-    setLoading(true);
+    // setLoading(true); // Removed to prevent UI flash
     try {
-      const serviceToUpdate = services.find(s => s.id === serviceId);
+      const serviceToUpdate = services.find(s => (s._id || s.id) === serviceId);
       if (!serviceToUpdate) throw new Error('Service not found');
 
       const newStatus = serviceToUpdate.status === 'active' ? 'paused' : 'active';
@@ -173,7 +160,7 @@ export function PostedServices({ user }) {
 
       const response = await servicesAPI.updateService(serviceId, { status: newStatus });
       setServices(services.map(s => 
-        s.id === response.data.id ? response.data : s
+        (s._id || s.id) === (response.data._id || response.data.id) ? response.data : s
       ));
       
       toast({
@@ -191,7 +178,7 @@ export function PostedServices({ user }) {
         isClosable: true,
       });
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -210,17 +197,22 @@ export function PostedServices({ user }) {
 
     setLoading(true);
     try {
+      let priceAmount = editingService.price;
+      if (typeof priceAmount === 'object' && priceAmount !== null) {
+        priceAmount = priceAmount.amount;
+      }
+
       const serviceData = {
         ...editingService,
-        price: parseFloat(editingService.price),
+        price: parseFloat(priceAmount),
         tags: Array.isArray(editingService.tags) 
           ? editingService.tags 
           : editingService.tags.split(',').map(tag => tag.trim()).filter(tag => tag),
       };
       
-      const response = await servicesAPI.updateService(editingService.id, serviceData);
+      const response = await servicesAPI.updateService(editingService._id || editingService.id, serviceData);
       setServices(services.map(s => 
-        s.id === response.data.id ? response.data : s
+        (s._id || s.id) === (response.data._id || response.data.id) ? response.data : s
       ));
       
       setEditingService(null);
@@ -276,7 +268,7 @@ export function PostedServices({ user }) {
               <Text color="gray.600">Manage your active service listings</Text>
             </Box>
             <Button
-              onClick={() => setShowAddService(true)}
+              onClick={onOpen}
               colorScheme="blue"
               leftIcon={<AddIcon />}
             >
@@ -312,7 +304,7 @@ export function PostedServices({ user }) {
                   <Text fontSize="sm" color="gray.600">Total Views</Text>
                   <ViewIcon color="purple.600" />
                 </Flex>
-                <Heading as="h2" size="xl" mb="1">{services.reduce((acc, s) => acc + s.views, 0)}</Heading>
+                <Heading as="h2" size="xl" mb="1">{services.reduce((acc, s) => acc + (s.views || 0), 0)}</Heading>
               </CardBody>
             </Card>
 
@@ -322,7 +314,7 @@ export function PostedServices({ user }) {
                   <Text fontSize="sm" color="gray.600">Total Bookings</Text>
                   <InfoIcon color="orange.600" />
                 </Flex>
-                <Heading as="h2" size="xl" mb="1">{services.reduce((acc, s) => acc + s.bookings, 0)}</Heading>
+                <Heading as="h2" size="xl" mb="1">{services.reduce((acc, s) => acc + (s.totalBookings || 0), 0)}</Heading>
               </CardBody>
             </Card>
           </Grid>
@@ -330,11 +322,15 @@ export function PostedServices({ user }) {
           {/* Services Grid */}
           <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }} gap={6}>
             {services.map((service) => (
-              <Card key={service.id} overflow="hidden" _hover={{ shadow: 'lg' }} transition="shadow 0.2s">
+              <Card key={service._id || service.id} overflow="hidden" _hover={{ shadow: 'lg' }} transition="shadow 0.2s">
                 <Box position="relative">
                   <Image
-                    src={service.image}
+                    src={getImageUrl(service.image)}
                     alt={service.title}
+                    onError={(e) => {
+                      console.error(`Failed to load image: ${getImageUrl(service.image)}`);
+                      e.target.src = PlaceholderImage;
+                    }}
                     w="full"
                     h="48"
                     objectFit="cover"
@@ -358,12 +354,12 @@ export function PostedServices({ user }) {
 
                   <HStack>
                     <InfoIcon color="gray.500" />
-                    <Text fontSize="sm">{service.price}</Text>
+                    <Text fontSize="sm">{formatPrice(service.price)}</Text>
                   </HStack>
 
                   <HStack>
                     <ViewIcon color="gray.500" />
-                    <Text fontSize="sm" color="gray.600">{service.location}</Text>
+                    <Text fontSize="sm" color="gray.600">{formatLocation(service.location)}</Text>
                   </HStack>
 
                   <HStack spacing={1} mt={3} mb={4} wrap="wrap">
@@ -377,7 +373,7 @@ export function PostedServices({ user }) {
                       <ViewIcon />
                       <Text>{service.views} views</Text>
                     </HStack>
-                    <Text>{service.bookings} bookings</Text>
+                    <Text>{service.totalBookings || 0} bookings</Text>
                   </HStack>
 
                   <HStack>
@@ -385,7 +381,7 @@ export function PostedServices({ user }) {
                       variant="outline"
                       size="sm"
                       flex="1"
-                      onClick={() => handleToggleStatus(service.id)}
+                      onClick={() => handleToggleStatus(service._id || service.id)}
                     >
                       {service.status === 'active' ? 'Pause' : 'Activate'}
                     </Button>
@@ -401,7 +397,7 @@ export function PostedServices({ user }) {
                       size="sm"
                       aria-label="Delete service"
                       icon={<DeleteIcon />}
-                      onClick={() => handleDeleteService(service.id)}
+                      onClick={() => handleDeleteService(service._id || service.id)}
                       colorScheme="red"
                     />
                   </HStack>
@@ -411,6 +407,96 @@ export function PostedServices({ user }) {
           </Grid>
         </>
       )}
+
+      <PostServiceModal isOpen={isOpen} onClose={onClose} user={user} onServicePosted={handleServicePosted} />
+
+      {/* Edit Service Modal */}
+      <Modal isOpen={!!editingService} onClose={() => setEditingService(null)} size="xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Service</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack spacing={4}>
+              <FormControl isRequired>
+                <FormLabel>Title</FormLabel>
+                <Input 
+                  value={editingService?.title || ''} 
+                  onChange={(e) => setEditingService({...editingService, title: e.target.value})}
+                />
+              </FormControl>
+              
+              <FormControl isRequired>
+                <FormLabel>Category</FormLabel>
+                <Select 
+                  value={editingService?.category || ''} 
+                  onChange={(e) => setEditingService({...editingService, category: e.target.value})}
+                >
+                  <option value="Home Services">Home Services</option>
+                  <option value="Education">Education</option>
+                  <option value="Tech Services">Tech Services</option>
+                  <option value="Health & Fitness">Health & Fitness</option>
+                  <option value="Creative Services">Creative Services</option>
+                  <option value="Business Services">Business Services</option>
+                  <option value="Other">Other</option>
+                </Select>
+              </FormControl>
+
+              <FormControl isRequired>
+                <FormLabel>Description</FormLabel>
+                <Textarea 
+                  value={editingService?.description || ''} 
+                  onChange={(e) => setEditingService({...editingService, description: e.target.value})}
+                />
+              </FormControl>
+
+              <HStack width="100%">
+                <FormControl>
+                  <FormLabel>City</FormLabel>
+                  <Input 
+                    value={editingService?.location?.city || ''} 
+                    onChange={(e) => setEditingService({
+                      ...editingService, 
+                      location: { ...(editingService.location || {}), city: e.target.value }
+                    })}
+                  />
+                </FormControl>
+                <FormControl>
+                  <FormLabel>State</FormLabel>
+                  <Input 
+                    value={editingService?.location?.state || ''} 
+                    onChange={(e) => setEditingService({
+                      ...editingService, 
+                      location: { ...(editingService.location || {}), state: e.target.value }
+                    })}
+                  />
+                </FormControl>
+              </HStack>
+
+              <FormControl isRequired>
+                <FormLabel>Price ($)</FormLabel>
+                <Input 
+                  type="number"
+                  value={editingService?.price?.amount !== undefined ? editingService.price.amount : (editingService?.price || '')} 
+                  onChange={(e) => setEditingService({...editingService, price: e.target.value})}
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Tags (comma separated)</FormLabel>
+                <Input 
+                  value={Array.isArray(editingService?.tags) ? editingService.tags.join(', ') : (editingService?.tags || '')} 
+                  onChange={(e) => setEditingService({...editingService, tags: e.target.value})}
+                />
+              </FormControl>
+            </VStack>
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="ghost" mr={3} onClick={() => setEditingService(null)}>Cancel</Button>
+            <Button colorScheme="blue" onClick={handleEditService} isLoading={loading}>Save Changes</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }

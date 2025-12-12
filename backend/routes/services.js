@@ -8,12 +8,13 @@ import {
   getProviderServices
 } from '../controllers/serviceController.js';
 import { protect, authorize } from '../middleware/auth.js';
+import upload from '../middleware/upload.js';
 
 const router = express.Router();
 
 router.route('/')
   .get(getServices)
-  .post(protect, authorize('provider', 'admin'), createService);
+  .post(protect, authorize('provider', 'admin'), upload, createService);
 
 router.route('/:id')
   .get(getService)

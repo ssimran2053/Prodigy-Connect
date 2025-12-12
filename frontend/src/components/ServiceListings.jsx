@@ -41,7 +41,31 @@ import {
   FormLabel,
 } from '@chakra-ui/react';
 import { SearchIcon, ViewIcon, StarIcon, ChatIcon, UpDownIcon, CalendarIcon } from '@chakra-ui/icons';
-import { servicesAPI, authAPI, reviewsAPI } from '../../services/api';
+import { FaHeart } from 'react-icons/fa';
+import { servicesAPI, authAPI, reviewsAPI, bookingsAPI } from '../../services/api';
+import PlaceholderImage from '../assets/c4928b5b313acf796a0d321d9c48650523bf2f6f.png';
+
+const API_BASE_URL = (import.meta.env && import.meta.env.VITE_API_URL) || 'http://localhost:5001';
+
+const getImageUrl = (path) => {
+  if (!path) return PlaceholderImage;
+  if (path.startsWith('http') || path.startsWith('data:')) return path;
+  
+  let baseUrl = API_BASE_URL;
+  
+  // Handle trailing slash
+  if (baseUrl.endsWith('/')) {
+    baseUrl = baseUrl.slice(0, -1);
+  }
+  
+  // If the base URL ends with /api, remove it because static files are usually at root
+  if (baseUrl.endsWith('/api')) {
+    baseUrl = baseUrl.slice(0, -4);
+  }
+    
+  return `${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`;
+};
+
 
 const formatPrice = (price) => {
   if (!price) return 'N/A';
@@ -59,6 +83,7 @@ const formatLocation = (location) => {
   if (typeof location === 'string') return location;
   if (location.city && location.state) return `${location.city}, ${location.state}`;
   if (location.city) return location.city;
+  if (location.address) return location.address;
   return 'Remote';
 }
 
@@ -70,6 +95,7 @@ function ReviewSection({ serviceId, providerId, canReview, user }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
+  const [eligibleBooking, setEligibleBooking] = useState(null);
   const toast = useToast();
 
   const fetchReviews = async () => {
@@ -90,6 +116,38 @@ function ReviewSection({ serviceId, providerId, canReview, user }) {
     fetchReviews();
   }, [serviceId]);
 
+  // Check if user has a completed booking to review
+  useEffect(() => {
+    const checkEligibility = async () => {
+      if (!user) return;
+      try {
+        // Fetch completed bookings for this user
+        const bookingsResponse = await bookingsAPI.getBookings({ status: 'completed' });
+        const userBookings = bookingsResponse.data || [];
+        
+        // Filter for this service
+        const serviceBookings = userBookings.filter(b => 
+          (b.service._id === serviceId || b.service === serviceId)
+        );
+
+        // Get current reviews to check which bookings are already reviewed
+        const reviewsResponse = await reviewsAPI.getServiceReviews(serviceId);
+        const serviceReviews = reviewsResponse.data || [];
+        
+        const userReviews = serviceReviews.filter(r => r.seeker._id === user._id);
+        const reviewedBookingIds = new Set(userReviews.map(r => r.booking));
+
+        // Find a booking that hasn't been reviewed
+        const bookingToReview = serviceBookings.find(b => !reviewedBookingIds.has(b._id));
+        
+        setEligibleBooking(bookingToReview);
+      } catch (err) {
+        console.error("Error checking review eligibility", err);
+      }
+    };
+    checkEligibility();
+  }, [user, serviceId]);
+
   const handleReviewSubmit = async (e) => {
     e.preventDefault();
     if (!user) {
@@ -102,12 +160,24 @@ function ReviewSection({ serviceId, providerId, canReview, user }) {
       return;
     }
 
+    if (!eligibleBooking) {
+      toast({
+        title: 'Unable to submit review',
+        description: 'You must have a completed booking for this service to leave a review.',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      return;
+    }
+
     try {
       await reviewsAPI.createReview({
         ...newReview,
         service: serviceId,
         provider: providerId,
         seeker: user._id,
+        booking: eligibleBooking._id
       });
       toast({
         title: 'Review submitted!',
@@ -117,6 +187,7 @@ function ReviewSection({ serviceId, providerId, canReview, user }) {
       });
       setNewReview({ rating: 5, comment: '' });
       fetchReviews(); // Refresh reviews
+      setEligibleBooking(null); // Reset eligibility
     } catch (error) {
       toast({
         title: 'Error submitting review',
@@ -152,7 +223,7 @@ function ReviewSection({ serviceId, providerId, canReview, user }) {
         ))}
       </VStack>
 
-      {canReview && (
+      {eligibleBooking && (
         <Box mt={8}>
           <Heading as="h4" size="md" mb={4}>Leave a Review</Heading>
           <VStack as="form" onSubmit={handleReviewSubmit} spacing={4} align="stretch">
@@ -182,6 +253,13 @@ function ReviewSection({ serviceId, providerId, canReview, user }) {
           </VStack>
         </Box>
       )}
+      {!eligibleBooking && user && (
+        <Box mt={8} p={4} bg="gray.50" borderRadius="md">
+          <Text color="gray.600" textAlign="center" fontSize="sm">
+            You can leave a review after you have booked and completed this service.
+          </Text>
+        </Box>
+      )}
     </Box>
   );
 }
@@ -191,10 +269,7 @@ function generateMockReviews(providerName) {
 }
 
 
-export function ServiceListings({ user, favoritesOnly = false, providerView = false, onBookService, onStartMessage }) {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+export function ServiceListings({ user, services, loading, error, favoritesOnly = false, providerView = false, onBookService, onStartMessage }) {
   const [renderError, setRenderError] = useState(null);
   
   const [searchQuery, setSearchQuery] = useState('');
@@ -206,35 +281,24 @@ export function ServiceListings({ user, favoritesOnly = false, providerView = fa
 
   // Initialize favorites from the user prop
   useEffect(() => {
-    if (user?.favorites) {
-      setFavorites(new Set(user.favorites));
-    }
-  }, [user]);
-
-  useEffect(() => {
-    const fetchServices = async () => {
+    const initFavorites = async () => {
+      if (user?.favorites) {
+        const favIds = user.favorites.map(f => (f && typeof f === 'object' && f._id) ? f._id : f);
+        setFavorites(new Set(favIds));
+      }
+      
       try {
-        setLoading(true);
-        console.log('[DEBUG] Fetching services...');
-        const response = await servicesAPI.getServices();
-        console.log('[DEBUG] API Response:', response);
-        
-        const servicesData = response.data || [];
-        setServices(servicesData);
-        console.log('[DEBUG] Services state set with:', servicesData);
-
-        setError(null);
-      } catch (err) {
-        console.error('[DEBUG] Error fetching services:', err);
-        setError(err.message || 'Failed to fetch services.');
-        setServices([]);
-      } finally {
-        setLoading(false);
+        const res = await authAPI.getMe();
+        if (res.data?.favorites) {
+          const freshFavIds = res.data.favorites.map(f => (f && typeof f === 'object' && f._id) ? f._id : f);
+          setFavorites(new Set(freshFavIds));
+        }
+      } catch (e) {
+        console.error("Failed to refresh favorites", e);
       }
     };
-
-    fetchServices();
-  }, []);
+    if (user) initFavorites();
+  }, [user?._id]);
 
 
   const categories = ['all', 'Home Services', 'Education', 'Tech Services', 'Health & Fitness', 'Creative Services'];
@@ -245,12 +309,13 @@ export function ServiceListings({ user, favoritesOnly = false, providerView = fa
     const matchesCategory = selectedCategory === 'all' || service.category === selectedCategory;
     
     if (providerView) {
-      // Assuming user prop has the current user's ID
-      return service.provider === user?._id && matchesSearch && matchesCategory;
+      const providerId = service.provider?._id || service.provider;
+      return providerId === user?._id && matchesSearch && matchesCategory;
     }
 
     const matchesFavorites = !favoritesOnly || favorites.has(service._id);
-    return matchesSearch && matchesCategory && matchesFavorites;
+    const isActive = service.status === 'active';
+    return matchesSearch && matchesCategory && matchesFavorites && isActive;
   });
 
   const toggleFavorite = async (serviceId) => {
@@ -299,9 +364,18 @@ export function ServiceListings({ user, favoritesOnly = false, providerView = fa
     }
   };
   
-  const handleViewDetails = (service) => {
+  const handleViewDetails = async (service) => {
     setSelectedService(service);
     onOpen();
+
+    try {
+      const response = await servicesAPI.getService(service._id);
+      if (response.data) {
+        setSelectedService(response.data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch service details:", error);
+    }
   }
   
   const renderContent = () => {
@@ -338,21 +412,25 @@ export function ServiceListings({ user, favoritesOnly = false, providerView = fa
             <Card key={service._id} overflow="hidden" _hover={{ shadow: 'lg' }} transition="shadow 0.2s">
               <Box position="relative">
                 <Image
-                  src={service.image || 'https://via.placeholder.com/400x300'}
+                  src={getImageUrl(service.image)}
                   alt={service.title}
+                  onError={(e) => {
+                    e.target.src = PlaceholderImage;
+                  }}
                   w="full"
                   h="48"
                   objectFit="cover"
                 />
                 <IconButton
                   isRound
-                  icon={<StarIcon color={favorites.has(service._id) ? 'red.500' : 'gray.500'} />}
+                  icon={<FaHeart color={favorites.has(service._id) ? 'white' : 'gray'} />}
                   aria-label="Favorite"
                   position="absolute"
                   top="3"
                   right="3"
                   onClick={() => toggleFavorite(service._id)}
-                  colorScheme={favorites.has(service._id) ? 'red' : 'gray'}
+                  bg={favorites.has(service._id) ? 'red.500' : 'gray.200'}
+                  _hover={{ bg: favorites.has(service._id) ? 'red.600' : 'gray.300' }}
                 />
                 <Badge position="absolute" top="3" left="3" colorScheme="blue">{service.category}</Badge>
               </Box>
@@ -364,6 +442,9 @@ export function ServiceListings({ user, favoritesOnly = false, providerView = fa
                   <Image
                     src={service.provider?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${service.provider?.name}`}
                     alt={service.provider?.name}
+                    onError={(e) => {
+                      e.currentTarget.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${service.provider?.name}`;
+                    }}
                     boxSize="8"
                     borderRadius="full"
                   />
@@ -502,7 +583,14 @@ function ServiceDetailModal({ user, service, isOpen, onClose, isFavorite, onTogg
         <ModalContent>
           <ModalHeader p="0">
             <Box position="relative">
-              <Image src={service.image || 'https://via.placeholder.com/400x300'} alt={service.title} w="full" h="64" objectFit="cover" />
+              <Image 
+                src={getImageUrl(service.image)} 
+                alt={service.title} 
+                w="full" 
+                h="64" 
+                objectFit="cover"
+                onError={(e) => { e.target.src = PlaceholderImage; }}
+              />
               <ModalCloseButton bg="white" />
             </Box>
           </ModalHeader>

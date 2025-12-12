@@ -19,15 +19,13 @@ const serviceSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please select a category'],
     enum: [
-      'Tutoring',
       'Home Services',
-      'Tech Support',
+      'Education',
+      'Tech Services',
+      'Health & Fitness',
       'Creative Services',
       'Business Services',
-      'Health & Wellness',
-      'Transportation',
-      'Events',
-      'Other'
+      'Other',
     ]
   },
   subcategory: {
@@ -83,6 +81,10 @@ const serviceSchema = new mongoose.Schema({
   images: [{
     type: String
   }],
+  image: {
+    type: String,
+    default: ''
+  },
   tags: [{
     type: String
   }],
@@ -110,6 +112,11 @@ const serviceSchema = new mongoose.Schema({
   isFeatured: {
     type: Boolean,
     default: false
+  },
+  status: {
+    type: String,
+    enum: ['active', 'paused', 'archived'],
+    default: 'active'
   },
   // Tracks the number of times a service page has been viewed
   views: {

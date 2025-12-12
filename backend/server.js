@@ -10,6 +10,8 @@ import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // --- Core Application Imports ---
 import { connectDB } from './config/db.js';
@@ -30,10 +32,15 @@ import messageRoutes from './routes/messages.js';
 import adminRoutes from './routes/admin.js';
 import mapsRoutes from './routes/maps.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 
 // Set security-related HTTP headers to protect against common vulnerabilities
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+}));
 
 // Enable Cross-Origin Resource Sharing (CORS) to allow requests from the frontend
 app.use(cors({
@@ -49,6 +56,9 @@ app.use(express.urlencoded({ extended: true }));
 // Compress response bodies for better performance
 app.use(compression());
 
+// Serve static files from the public directory
+app.use(express.static(path.join(__dirname, 'public')));
+
 // Log HTTP requests in development mode for easier debugging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
@@ -57,7 +67,7 @@ if (process.env.NODE_ENV === 'development') {
 // Apply rate limiting to all API routes to prevent abuse
 const limiter = rateLimit({
   windowMs: (process.env.RATE_LIMIT_WINDOW || 15) * 60 * 1000,
-  max: process.env.RATE_LIMIT_MAX_REQUESTS || 100,
+  max: process.env.RATE_LIMIT_MAX_REQUESTS || 500,
   message: 'Too many requests from this IP, please try again later'
 });
 app.use('/api', limiter);

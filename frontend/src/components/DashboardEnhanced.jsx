@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { Routes, Route, Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -12,17 +13,6 @@ import {
   MenuList,
   MenuItem,
   useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-  Textarea,
   Grid,
   Card,
   CardBody,
@@ -32,7 +22,8 @@ import {
   Avatar,
   IconButton,
   Badge,
-  createIcon // Added to create custom icons without external deps
+  createIcon,
+  useToast
 } from '@chakra-ui/react';
 import { ServiceListings } from './ServiceListings';
 import { MessagingPanel } from './MessagingPanel';
@@ -50,6 +41,7 @@ import { PostedServices } from './PostedServices';
 import { ServiceRequests } from './ServiceRequests';
 import { ProviderReviews } from './ProviderReviews';
 import { SettingsPanel } from './SettingsPanel';
+import { PostServiceModal } from './PostServiceModal';
 import { 
   InfoIcon,
   SearchIcon,
@@ -66,6 +58,7 @@ import {
   BellIcon
 } from '@chakra-ui/icons';
 import logoImageLight from '../assets/c4928b5b313acf796a0d321d9c48650523bf2f6f.png';
+import { servicesAPI, bookingsAPI, messagesAPI, reviewsAPI } from '../../services/api';
 
 // --- Custom Icons ---
 
@@ -100,24 +93,74 @@ export function DashboardEnhanced({ user, onLogout }) {
   const { isOpen: isPostServiceOpen, onOpen: onPostServiceOpen, onClose: onPostServiceClose } = useDisclosure();
   const { isOpen: isSearchOpen, onOpen: onSearchOpen, onClose: onSearchClose } = useDisclosure();
   const { isOpen: isSettingsOpen, onOpen: onSettingsOpen, onClose: onSettingsClose } = useDisclosure();
+  const [providerServices, setProviderServices] = useState([]);
+  const [allServices, setAllServices] = useState([]);
+  const [loadingServices, setLoadingServices] = useState(true);
+  const [error, setError] = useState(null);
+  const toast = useToast();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const fetchServices = async () => {
+    try {
+      setLoadingServices(true);
+      setError(null);
+
+      if (user && user._id) {
+        const response = await servicesAPI.getProviderServices(user._id);
+        setProviderServices(response.data);
+      } else {
+        console.warn('User or user._id is not available, cannot fetch services.');
+        setProviderServices([]);
+      }
+    } catch (err) {
+      setError(err);
+      toast({
+        title: 'Failed to load services',
+        description: err.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setLoadingServices(false);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch all services for browsing
+    servicesAPI.getServices()
+      .then(response => setAllServices(response.data || []))
+      .catch(err => {
+        console.error("Failed to fetch all services:", err);
+        toast({ title: 'Could not load all services', description: err.message, status: 'error' });
+      });
+
+
+    // Fetch provider-specific services if the user is a provider
+    if (user?.role === 'provider') {
+      if (user._id) {
+        fetchServices();
+      }
+    }
+  }, [user?._id, user?.role, toast]);
+
+  const handleServicePosted = (newService) => {
+    setProviderServices([newService, ...providerServices]);
+    setAllServices([newService, ...allServices]);
+  };
+
 
   const handleSelectServiceToBook = (service) => {
     setServiceToBook(service);
-    setCurrentView('booking');
+    navigate('/dashboard/booking');
   };
 
   const handleStartMessage = (recipient) => {
     setUserToMessage(recipient);
-    setCurrentView('messages');
+    navigate('/dashboard/messages');
   };
-
-  const handleViewChange = (view) => {
-    if (view !== 'messages') {
-      setUserToMessage(null);
-    }
-    setCurrentView(view);
-  };
-
+  
   // Custom Icon wrapper using Global Variables
   const NavIcon = ({ icon, isActive }) => (
     <Icon 
@@ -130,26 +173,27 @@ export function DashboardEnhanced({ user, onLogout }) {
   );
 
   const navigation = [
-    { id: 'home', label: 'Home', icon: HomeIcon, show: true }, // Updated Icon
-    { id: 'browse', label: 'Browse Services', icon: SearchIcon, show: user.role !== 'provider' },
-    { id: 'favorites', label: 'Favorites', icon: StarIcon, show: user.role === 'seeker' },
-    { id: 'booking', label: 'Book Services', icon: CalendarIcon, show: user.role === 'seeker' },
-    { id: 'posted-services', label: 'Posted Services', icon: AddIcon, show: user.role === 'provider' },
-    { id: 'requests', label: 'Requests', icon: ChatIcon, show: user.role === 'provider' },
-    { id: 'messages', label: 'Messages', icon: ChatIcon, show: true },
+    { id: 'home', path: '/dashboard', label: 'Home', icon: HomeIcon, show: true }, // Updated Icon
+    { id: 'browse', path: '/dashboard/browse', label: 'Browse Services', icon: SearchIcon, show: user.role !== 'provider' },
+    { id: 'favorites', path: '/dashboard/favorites', label: 'Favorites', icon: StarIcon, show: user.role !== 'provider' },
+    { id: 'booking', path: '/dashboard/booking', label: 'Book Services', icon: CalendarIcon, show: user.role === 'seeker' },
+    { id: 'posted-services', path: '/dashboard/posted-services', label: 'Posted Services', icon: AddIcon, show: user.role === 'provider' },
+    { id: 'requests', path: '/dashboard/requests', label: 'Requests', icon: ChatIcon, show: user.role === 'provider' },
+    { id: 'messages', path: '/dashboard/messages', label: 'Messages', icon: ChatIcon, show: true },
     { 
       id: 'calendar', 
-      label: user.role === 'seeker' ? 'My Bookings' : 'My Calendar', 
+      path: '/dashboard/calendar',
+      label: user.role === 'provider' ? 'My Calendar' : 'My Bookings', 
       icon: CalendarIcon, 
-      show: user.role !== 'admin'
+      show: true,
     },
-    { id: 'map', label: 'Map', icon: ViewIcon, show: user.role === 'seeker' || user.role === 'admin' },
-    { id: 'payments', label: 'Payments', icon: PaymentIcon, show: user.role == 'provider' },
-    { id: 'reviews', label: 'Reviews & Ratings', icon: StarIcon, show: user.role === 'provider' },
-    { id: 'filters', label: 'Advanced Search', icon: UpDownIcon, show: user.role === 'seeker' },
-    { id: 'analytics', label: 'Platform Analytics', icon: ArrowUpIcon, show: user.role === 'admin' },
-    { id: 'admin', label: 'Admin Panel', icon: CheckCircleIcon, show: user.role === 'admin' },
-    { id: 'profile', label: 'Profile', icon: ViewIcon, show: true },
+    { id: 'map', path: '/dashboard/map', label: 'Map', icon: ViewIcon, show: user.role === 'seeker' || user.role === 'admin' },
+    { id: 'payments', path: '/dashboard/payments', label: 'Payments', icon: PaymentIcon, show: user.role == 'provider' },
+    { id: 'reviews', path: '/dashboard/reviews', label: 'Reviews & Ratings', icon: StarIcon, show: user.role === 'provider' },
+    { id: 'filters', path: '/dashboard/filters', label: 'Advanced Search', icon: UpDownIcon, show: user.role !== 'provider' },
+    { id: 'analytics', path: '/dashboard/analytics', label: 'Platform Analytics', icon: ArrowUpIcon, show: user.role === 'admin' },
+    { id: 'admin', path: '/dashboard/admin-panel', label: 'Admin Panel', icon: CheckCircleIcon, show: user.role === 'admin' },
+    { id: 'profile', path: '/dashboard/profile', label: 'Profile', icon: ViewIcon, show: true },
   ].filter(item => item.show);
 
   return (
@@ -253,11 +297,12 @@ export function DashboardEnhanced({ user, onLogout }) {
             </Text>
             <VStack spacing="2" align="stretch">
               {navigation.map((item) => {
-                const isActive = currentView === item.id;
+                const isActive = location.pathname === item.path;
                 return (
                   <Button
+                    as={RouterLink}
+                    to={item.path}
                     key={item.id}
-                    onClick={() => handleViewChange(item.id)}
                     justifyContent="flex-start"
                     variant="ghost"
                     h="10"
@@ -282,29 +327,33 @@ export function DashboardEnhanced({ user, onLogout }) {
 
         {/* Main Content Area */}
         <Box as="main" flex="1" p="8" overflowY="auto" h="calc(100vh - 65px)" bg="var(--background)">
-          {currentView === 'home' && <HomeView user={user} onNavigate={handleViewChange} />}
-          {currentView === 'browse' && <ServiceListings user={user} onBookService={handleSelectServiceToBook} onStartMessage={handleStartMessage} />}
-          {currentView === 'posted-services' && <PostedServices user={user} />}
-          {currentView === 'requests' && <ServiceRequests user={user} />}
-          {currentView === 'favorites' && <ServiceListings user={user} favoritesOnly onBookService={handleSelectServiceToBook} onStartMessage={handleStartMessage} />}
-          {currentView === 'messages' && <MessagingPanel user={user} initialUserToMessage={userToMessage} />}
-          {currentView === 'calendar' && <CalendarView user={user} />}
-          {currentView === 'booking' && <AdvancedBooking user={user} serviceToBook={serviceToBook} />}
-          {currentView === 'map' && <MapView user={user} />}
-          {currentView === 'analytics' && <AnalyticsDashboard userRole={user.role} />}
-          {currentView === 'payments' && <PaymentSystem />}
-          {currentView === 'reviews' && <ProviderReviews providerId={user.id} providerName={user.name} />}
-          {currentView === 'filters' && <AdvancedFilters />}
-          {currentView === 'profile' && <ProfileView user={user} isOwnProfile />}
-          {currentView === 'admin' && user.role === 'admin' && <AdminPanelSimple />}
+          <Routes>
+            <Route path="/" element={<HomeView user={user} onNavigate={navigate} />} />
+            <Route path="/browse" element={<ServiceListings user={user} services={allServices} loading={false} error={null} onBookService={handleSelectServiceToBook} onStartMessage={handleStartMessage} />} />
+            <Route path="/posted-services" element={<PostedServices user={user} services={providerServices} setServices={setProviderServices} loading={loadingServices} error={error} fetchServices={fetchServices} />} />
+            <Route path="/requests" element={<ServiceRequests user={user} />} />
+            <Route path="/favorites" element={<ServiceListings user={user} services={allServices} loading={false} error={null} favoritesOnly onBookService={handleSelectServiceToBook} onStartMessage={handleStartMessage} />} />
+            <Route path="/messages" element={<MessagingPanel user={user} initialUserToMessage={userToMessage} />} />
+            <Route path="/calendar" element={<CalendarView user={user} />} />
+            <Route path="/booking" element={<AdvancedBooking user={user} serviceToBook={serviceToBook} />} />
+            <Route path="/analytics" element={<AnalyticsDashboard userRole={user.role} />} />
+            <Route path="/payments" element={<PaymentSystem />} />
+
+            <Route path="/reviews" element={<ProviderReviews providerId={user._id} providerName={user.name} />} />
+            <Route path="/filters" element={<AdvancedFilters />} />
+            <Route path="/map" element={<MapView />} />
+            <Route path="/profile" element={<ProfileView user={user} isOwnProfile={true} onOpenSettings={onSettingsOpen} />} />
+            <Route path="/services" element={<ServiceListings user={user} services={allServices} loading={false} error={null} onBookService={handleSelectServiceToBook} onStartMessage={handleStartMessage} />} />
+            <Route path="/admin-panel" element={<AdminPanelSimple userRole={user.role} />} />
+          </Routes>
         </Box>
       </Flex>
 
-      <PostServiceModal isOpen={isPostServiceOpen} onClose={onPostServiceClose} />
+      <PostServiceModal isOpen={isPostServiceOpen} onClose={onPostServiceClose} user={user} onServicePosted={handleServicePosted} />
       <GlobalSearch 
         isOpen={isSearchOpen} 
         onClose={onSearchClose} 
-        onNavigate={(view) => setCurrentView(view)}
+        onNavigate={(path) => navigate(`/dashboard${path}`)}
         userRole={user.role}
       />
       {isSettingsOpen && <SettingsPanel user={user} onClose={onSettingsClose} />}
@@ -313,6 +362,57 @@ export function DashboardEnhanced({ user, onLogout }) {
 }
 
 function HomeView({ user, onNavigate }) {
+  const [stats, setStats] = useState({
+    metric1: 0,
+    metric2: 0,
+    metric3: 0
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        if (user.role === 'provider') {
+          // Provider Stats
+          // 1. Profile Views (Sum of service views)
+          const servicesRes = await servicesAPI.getProviderServices(user._id);
+          const services = servicesRes.data || [];
+          const views = services.reduce((acc, s) => acc + (s.views || 0), 0);
+
+          // 2. Active Requests (Pending)
+          const bookingsRes = await bookingsAPI.getBookings({ status: 'pending' });
+          const requests = bookingsRes.count || (bookingsRes.data ? bookingsRes.data.length : 0);
+
+          // 3. Rating - fetch fresh reviews to calculate
+          const reviewsRes = await reviewsAPI.getProviderReviews(user._id);
+          const reviews = reviewsRes.data || [];
+          const totalReviews = reviews.length;
+          const averageRating = totalReviews > 0 ? (reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews) : 0;
+
+
+          setStats({ metric1: views, metric2: requests, metric3: averageRating.toFixed(1) });
+        } else {
+          // Seeker Stats
+          // 1. Services Available
+          const servicesRes = await servicesAPI.getServices();
+          const totalServices = servicesRes.total || servicesRes.count || (servicesRes.data ? servicesRes.data.length : 0);
+
+          // 2. Favorites
+          const favoritesCount = user.favorites ? user.favorites.length : 0;
+
+          // 3. Messages
+          const messagesRes = await messagesAPI.getConversations();
+          const messageCount = messagesRes.data ? messagesRes.data.length : 0;
+
+          setStats({ metric1: totalServices, metric2: favoritesCount, metric3: messageCount });
+        }
+      } catch (error) {
+        console.error("Error fetching home stats:", error);
+      }
+    };
+
+    fetchStats();
+  }, [user]);
+
   return (
     <Box maxW="6xl" mx="auto">
       <Box mb="8">
@@ -328,7 +428,7 @@ function HomeView({ user, onNavigate }) {
       <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={6} mb={8}>
         <Card bg="var(--card)" shadow="sm" borderRadius="xl" border="1px solid" borderColor="var(--border)">
           <CardBody p="6">
-            <Heading size="2xl" mb="2" color="var(--foreground)" fontWeight="medium">247</Heading>
+            <Heading size="2xl" mb="2" color="var(--foreground)" fontWeight="medium">{stats.metric1}</Heading>
             <Text color="var(--muted-foreground)" fontSize="md">
               {user.role === 'provider' ? 'Profile Views' : 'Services Available'}
             </Text>
@@ -336,7 +436,7 @@ function HomeView({ user, onNavigate }) {
         </Card>
         <Card bg="var(--card)" shadow="sm" borderRadius="xl" border="1px solid" borderColor="var(--border)">
           <CardBody p="6">
-            <Heading size="2xl" mb="2" color="var(--foreground)" fontWeight="medium">18</Heading>
+            <Heading size="2xl" mb="2" color="var(--foreground)" fontWeight="medium">{stats.metric2}</Heading>
             <Text color="var(--muted-foreground)" fontSize="md">
               {user.role === 'provider' ? 'Active Requests' : 'Saved Favorites'}
             </Text>
@@ -344,9 +444,7 @@ function HomeView({ user, onNavigate }) {
         </Card>
         <Card bg="var(--card)" shadow="sm" borderRadius="xl" border="1px solid" borderColor="var(--border)">
           <CardBody p="6">
-            <Heading size="2xl" mb="2" color="var(--foreground)" fontWeight="medium">
-              {user.role === 'provider' ? '4.8' : '12'}
-            </Heading>
+            <Heading size="2xl" mb="2" color="var(--foreground)" fontWeight="medium">{stats.metric3}</Heading>
             <Text color="var(--muted-foreground)" fontSize="md">
               {user.role === 'provider' ? 'Average Rating' : 'Messages'}
             </Text>
@@ -372,19 +470,19 @@ function HomeView({ user, onNavigate }) {
           <HStack spacing="3">
             {user.role === 'provider' ? (
               <>
-                <Button bg="whiteAlpha.300" _hover={{ bg: "whiteAlpha.400" }} color="white" onClick={() => onNavigate('posted-services')}>
+                <Button bg="whiteAlpha.300" _hover={{ bg: "whiteAlpha.400" }} color="white" onClick={() => onNavigate('/dashboard/posted-services')}>
                   Manage Services
                 </Button>
-                <Button bg="whiteAlpha.300" _hover={{ bg: "whiteAlpha.400" }} color="white" onClick={() => onNavigate('requests')}>
+                <Button bg="whiteAlpha.300" _hover={{ bg: "whiteAlpha.400" }} color="white" onClick={() => onNavigate('/dashboard/requests')}>
                   View Requests
                 </Button>
               </>
             ) : user.role === 'admin' ? (
               <>
-                <Button bg="whiteAlpha.300" _hover={{ bg: "whiteAlpha.400" }} color="white" onClick={() => onNavigate('admin')}>
+                <Button bg="whiteAlpha.300" _hover={{ bg: "whiteAlpha.400" }} color="white" onClick={() => onNavigate('/admin/dashboard')}>
                   User Management
                 </Button>
-                <Button bg="whiteAlpha.300" _hover={{ bg: "whiteAlpha.400" }} color="white" onClick={() => onNavigate('analytics')}>
+                <Button bg="whiteAlpha.300" _hover={{ bg: "whiteAlpha.400" }} color="white" onClick={() => onNavigate('/dashboard/analytics')}>
                   Analytics
                 </Button>
               </>
@@ -396,7 +494,7 @@ function HomeView({ user, onNavigate }) {
                   color="white" 
                   fontWeight="medium"
                   px="6"
-                  onClick={() => onNavigate('browse')}
+                  onClick={() => onNavigate('/dashboard/browse')}
                 >
                   Browse Services
                 </Button>
@@ -406,7 +504,7 @@ function HomeView({ user, onNavigate }) {
                   color="white" 
                   fontWeight="medium"
                   px="6"
-                  onClick={() => onNavigate('map')}
+                  onClick={() => onNavigate('/map')}
                 >
                   View Map
                 </Button>
@@ -416,7 +514,7 @@ function HomeView({ user, onNavigate }) {
                   color="white" 
                   fontWeight="medium"
                   px="6"
-                  onClick={() => onNavigate('favorites')}
+                  onClick={() => onNavigate('/dashboard/favorites')}
                 >
                   My Favorites
                 </Button>
@@ -459,57 +557,5 @@ function HomeView({ user, onNavigate }) {
         </CardBody>
       </Card>
     </Box>
-  );
-}
-
-function PostServiceModal({ isOpen, onClose }) {
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} size="2xl">
-      <ModalOverlay />
-      <ModalContent borderRadius="xl" bg="var(--card)">
-        <ModalHeader borderBottomWidth="1px" borderColor="var(--border)" color="var(--foreground)">Post a New Service</ModalHeader>
-        <ModalBody py="6">
-          <VStack as="form" spacing="5">
-            <FormControl>
-              <FormLabel fontWeight="medium" color="var(--foreground)">Service Title</FormLabel>
-              <Input placeholder="e.g., Professional Plumbing Services" borderRadius="md" bg="var(--input-background)" borderColor="var(--input)" />
-            </FormControl>
-            <FormControl>
-              <FormLabel fontWeight="medium" color="var(--foreground)">Category</FormLabel>
-              <Select borderRadius="md" bg="var(--input-background)" borderColor="var(--input)">
-                <option>Home Services</option>
-                <option>Tutoring & Education</option>
-                <option>Tech Support</option>
-                <option>Creative Services</option>
-                <option>Other</option>
-              </Select>
-            </FormControl>
-            <FormControl>
-              <FormLabel fontWeight="medium" color="var(--foreground)">Description</FormLabel>
-              <Textarea rows={4} placeholder="Describe your service..." borderRadius="md" bg="var(--input-background)" borderColor="var(--input)" />
-            </FormControl>
-            <Grid templateColumns="repeat(2, 1fr)" gap={4} w="full">
-              <FormControl>
-                <FormLabel fontWeight="medium" color="var(--foreground)">Price Range</FormLabel>
-                <Input placeholder="$50-100/hr" borderRadius="md" bg="var(--input-background)" borderColor="var(--input)" />
-              </FormControl>
-              <FormControl>
-                <FormLabel fontWeight="medium" color="var(--foreground)">Location</FormLabel>
-                <Input placeholder="Sacramento, CA" borderRadius="md" bg="var(--input-background)" borderColor="var(--input)" />
-              </FormControl>
-            </Grid>
-          </VStack>
-        </ModalBody>
-        <ModalFooter borderTopWidth="1px" borderColor="var(--border)" bg="var(--muted)" borderBottomRadius="xl">
-          <Button variant="ghost" mr={3} onClick={onClose} color="var(--muted-foreground)">Cancel</Button>
-          <Button 
-            className="btn-gradient-primary" // Use global gradient class
-            colorScheme="blue" 
-          >
-            Post Service
-          </Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
   );
 }
