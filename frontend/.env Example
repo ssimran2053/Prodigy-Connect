@@ -1,2 +1,2 @@
-VITE_API_URL=http://localhost:5001/api
-VITE_GOOGLE_MAPS_API_KEY=AIzaSyCzctLj6T2BgeE7OhCoLQnSTL6Ccg45CNo
+VITE_API_URL=Paste the VITE_API_URL here, found in discord resources
+VITE_GOOGLE_MAPS_API_KEY=Paste the VITE_GOOGLE_MAPS_API_KEY here, same as the GOOGLE_MAPS_API_KEY, found in discord resources
